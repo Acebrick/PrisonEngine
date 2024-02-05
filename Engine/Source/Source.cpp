@@ -1,7 +1,9 @@
 #include <iostream>
+#include "Game.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-	printf("Hello World!");
+	Game::GetGame()->Run();
+	Game::DestroyGame();
 	return 0;
 }
