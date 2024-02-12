@@ -77,20 +77,6 @@ void Game::Start()
 		return;
 	}
 
-	// Debug
-	testTexture1 = new Texture(m_RendererRef);
-	if (!testTexture1->ImportTexture("Content/Letters/DBlue.png"))
-	{
-		testTexture1->Cleanup();
-		delete testTexture1;
-		testTexture1 = nullptr;
-	}
-	else
-	{
-		testTexture1->posX = 100.0f;
-		testTexture1->posY = 190.0f;
-	}
-
 	GameLoop();
 }
 
@@ -165,11 +151,6 @@ void Game::Render()
 
 	// Use the colour just stated to clear the previous frame and fill in with that colour
 	SDL_RenderClear(m_RendererRef);
-
-	if (testTexture1 != nullptr)
-	{
-		testTexture1->Draw();
-	}
 
 	// Present the graphics to the renderer
 	SDL_RenderPresent(m_RendererRef);
