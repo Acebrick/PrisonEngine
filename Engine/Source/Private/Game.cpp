@@ -1,10 +1,13 @@
 #include "Game.h"
 #include <iostream>
+#include "SDL2/SDL.h"
+#include "Debug.h"
+#include "Graphics/Texture.h"
 
 Game* Game::GetGame()
 {
 	// static = only run initialisation once
-	//this is thread safe
+	// this is thread safe
 	static Game* GameSingleton = new Game();
 	return GameSingleton;
 }
@@ -19,6 +22,11 @@ Game::Game()
 	printf("Game created\n");
 
 	isGameOpen = true;
+	m_WindowRef = nullptr;
+	m_RendererRef = nullptr;
+
+	// Debug variables
+	testTexture1 = nullptr;
 }
 
 Game::~Game()
@@ -28,18 +36,60 @@ Game::~Game()
 
 void Game::Initialise()
 {
-	printf("Initialise game\n");
-	
 	// TO DO: Run initialisation of dependencies
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	{
+		EE_LOG("Game", "SDL failed to init: " << SDL_GetError());
+		return;
+	}
+
+	EE_LOG("Game", "Game successfully initialised all libraries");
 
 	Start();
 }
 
 void Game::Start()
 {
-	printf("Start game\n");
-
 	// Launch the game window
+
+	m_WindowRef = SDL_CreateWindow("Prison Engine",
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		1280, 720,
+		0);
+
+	// Did the window successfully create
+	if (m_WindowRef == nullptr)
+	{
+		EE_LOG("Game", "SDL window failed to create: " << SDL_GetError());
+		
+		// Deallocate everything that's been allocated
+		Cleanup();
+		return;
+	}
+
+	m_RendererRef = SDL_CreateRenderer(m_WindowRef, -1, 0);
+
+	// Did the renderer fail
+	if (m_RendererRef == nullptr)
+	{
+		EE_LOG("Game", "Renderer failed to create: " << SDL_GetError());
+		Cleanup();
+		return;
+	}
+
+	// Debug
+	testTexture1 = new Texture(m_RendererRef);
+	if (!testTexture1->ImportTexture("Content/Letters/DBlue.png"))
+	{
+		testTexture1->Cleanup();
+		delete testTexture1;
+		testTexture1 = nullptr;
+	}
+	else
+	{
+		testTexture1->posX = 100.0f;
+		testTexture1->posY = 190.0f;
+	}
 
 	GameLoop();
 }
@@ -62,36 +112,70 @@ void Game::GameLoop()
 
 void Game::Cleanup()
 {
-	printf("Cleanup game\n");
+	// Does the renderer exist
+	if (m_RendererRef != nullptr)
+	{
+		SDL_DestroyRenderer(m_RendererRef);
+		EE_LOG("Game", "Game renderer has been destroyed");
+	}
+
+	// Does the window exist
+	if (m_WindowRef != nullptr)
+	{
+		SDL_DestroyWindow(m_WindowRef);
+		EE_LOG("Game", "Game window has been destroyed");
+	}
+
+	SDL_Quit();
+	EE_LOG("Game", "Game has deallocated all memory");
 }
 
 void Game::ProcessInput()
 {
-	printf("Process input\n");
+	// Data type that reads the SDL input events for the window
+	SDL_Event inputEvent;
+
+	// Run through each input in that frame
+	while (SDL_PollEvent(&inputEvent))
+	{
+		// If cross button is pressed on the window ,close the app
+		if (inputEvent.type == SDL_QUIT)
+		{
+			QuitApp();
+		}
+	}
 }
 
 void Game::Update()
 {
-	printf("Update game logic\n");
+	static float angle = 0.0f;
 
-	static int frames = 0;
+	if (testTexture1 != nullptr)
+	{
+		testTexture1->angle = angle;
+	}
 
-	if (frames >= 30)
-	{
-		isGameOpen = false;
-	}
-	else
-	{
-		++frames;
-	}
+	angle += 0.1f;
 }
 
 void Game::Render()
 {
-	printf("Render graphics\n");
+	// Tell renderer what colour to use next
+	SDL_SetRenderDrawColor(m_RendererRef, 150, 150, 150, 255);
+
+	// Use the colour just stated to clear the previous frame and fill in with that colour
+	SDL_RenderClear(m_RendererRef);
+
+	if (testTexture1 != nullptr)
+	{
+		testTexture1->Draw();
+	}
+
+	// Present the graphics to the renderer
+	SDL_RenderPresent(m_RendererRef);
 }
 
 void Game::CollectGarbage()
 {
-	printf("Collect garbage\n");
+	
 }

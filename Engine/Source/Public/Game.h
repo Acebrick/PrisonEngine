@@ -1,7 +1,14 @@
 #pragma once
 
+// Forward declaration
+struct SDL_Window;
+struct SDL_Renderer;
+class Texture;
+
 class Game
 {
+
+
 public:
 	// Get the game singleton or create one if it doesn't exist
 	static Game* GetGame();
@@ -11,6 +18,8 @@ public:
 
 	// Run the game
 	void Run() { Initialise(); };
+
+	void QuitApp() { isGameOpen = false; }
 
 private:
 							// Functions
@@ -52,4 +61,13 @@ private:
 
 	// Any objects that are marked for delete will be deallocated from memory here
 	void CollectGarbage();
+
+	// Stores the window for the app/game
+	SDL_Window* m_WindowRef;
+
+	// Stores the renderer
+	SDL_Renderer* m_RendererRef;
+
+	// Debug testing variables
+	Texture* testTexture1;
 };
