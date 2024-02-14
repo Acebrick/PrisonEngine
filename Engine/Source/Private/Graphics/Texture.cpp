@@ -6,9 +6,9 @@
 Texture::Texture(SDL_Renderer* renderer)
 {
 	m_RendererRef = renderer;
-	angle = 0.0f;
-	path = "";
-	posX = posY = 0;
+	m_Angle = 0.0f;
+	m_Path = "";
+	m_PosX = m_PosY = 0;
 	m_SurfaceData = nullptr;
 	m_TextureRef = nullptr;
 	scale = 1;
@@ -17,7 +17,7 @@ Texture::Texture(SDL_Renderer* renderer)
 bool Texture::ImportTexture(const char* pathToFile)
 {
 	// Store path file
-	path = pathToTile;
+	m_Path = pathToFile;
 
 	// Import image and convert to surface
 	// Fill in object with data for the image
@@ -42,7 +42,7 @@ bool Texture::ImportTexture(const char* pathToFile)
 		return false;
 	}
 
-	EE_LOG("Texture", "Successfully imported texture: " << path);
+	EE_LOG("Texture", "Successfully imported texture: " << m_Path);
 
 	return true;
 }
@@ -53,7 +53,7 @@ void Texture::Draw()
 	float imageHeight = (float)m_SurfaceData->h;
 
 	SDL_FRect destRect = {
-		(float)posX, (float)posY,
+		(float)m_PosX, (float)m_PosY,
 		imageWidth * scale, imageHeight * scale
 	};
 
@@ -67,7 +67,7 @@ void Texture::Draw()
 		m_TextureRef, // The texture to draw to the renderer
 		NULL, // Clip rect
 		&destRect, // Position and scale on the screen
-		angle, // rotation of the texture
+		m_Angle, // rotation of the texture
 		&center, // center point for the rotation
 		SDL_FLIP_NONE); // flip the texture vertical or horizontal
 }
@@ -75,7 +75,7 @@ void Texture::Draw()
 void Texture::Cleanup()
 {
 	// Clean up the surface
-	if (m_surfaceData != nullptr)
+	if (m_SurfaceData != nullptr)
 	{
 		SDL_FreeSurface(m_SurfaceData);
 	}
@@ -86,5 +86,5 @@ void Texture::Cleanup()
 		SDL_DestroyTexture(m_TextureRef);
 	}
 
-	EE_LOG("Texture", "Successfully destroyed image: " << path);
+	EE_LOG("Texture", "Successfully destroyed image: " << m_Path);
 }

@@ -1881,7 +1881,7 @@ extern DECLSPEC void SDLCALL SDL_DisableScreenSaver(void);
  * \sa SDL_GL_GetProcAddress
  * \sa SDL_GL_UnloadLibrary
  */
-extern DECLSPEC int SDLCALL SDL_GL_LoadLibrary(const char *path);
+extern DECLSPEC int SDLCALL SDL_GL_LoadLibrary(const char *m_Path);
 
 /**
  * Get an OpenGL function by name.

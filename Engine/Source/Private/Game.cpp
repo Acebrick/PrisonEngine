@@ -24,9 +24,6 @@ Game::Game()
 	isGameOpen = true;
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
-
-	// Debug variables
-	testTexture1 = nullptr;
 }
 
 Game::~Game()
@@ -134,14 +131,7 @@ void Game::ProcessInput()
 
 void Game::Update()
 {
-	static float angle = 0.0f;
 
-	if (testTexture1 != nullptr)
-	{
-		testTexture1->angle = angle;
-	}
-
-	angle += 0.1f;
 }
 
 void Game::Render()

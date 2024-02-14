@@ -7,17 +7,16 @@ struct SDL_Surface;
 class Texture
 {
 public:
-	int posX, posY;
+	// Variables
+	int m_PosX, m_PosY;
 	float scale;
 
 	// Rotation of the image
-	float angle;
-	
-	
+	float m_Angle;
 
+	// Functions
 	Texture(SDL_Renderer* renderer);
 	~Texture() = default;
-
 	// Import and create a texture
 	bool ImportTexture(const char* pathToFile);
 
@@ -27,10 +26,12 @@ public:
 	// Deallocate memory
 	void Cleanup();
 
-	const char* GetPath() const { return path; }
+	// Get the original image path
+	const char* GetPath() const { return m_Path; }
 
 private:
-	// Texture that SDL understands
+	// Variables
+		// Texture that SDL understands
 	SDL_Texture* m_TextureRef;
 
 	// Store the assigned renderer
@@ -40,5 +41,8 @@ private:
 	SDL_Surface* m_SurfaceData;
 
 	// Path to the original image
-	const char* path;
+	const char* m_Path;
+
+	// Functions
 };
+
