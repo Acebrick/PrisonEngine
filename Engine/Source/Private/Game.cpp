@@ -24,6 +24,9 @@ Game::Game()
 	isGameOpen = true;
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
+
+	// Debug variables
+	testTexture1 = nullptr;
 }
 
 Game::~Game()
@@ -72,6 +75,20 @@ void Game::Start()
 		EE_LOG("Game", "Renderer failed to create: " << SDL_GetError());
 		Cleanup();
 		return;
+	}
+	
+	// Debug
+	testTexture1 = new Texture(m_RendererRef);
+	if (!testTexture1->ImportTexture("Content/Letters/DBlue.png"))
+	{
+		testTexture1->Cleanup();
+		delete testTexture1;
+		testTexture1 = nullptr;
+	}
+	else
+	{
+		testTexture1->m_PosX = 100.0f;
+		testTexture1->m_PosY = 190.0f;
 	}
 
 	GameLoop();
@@ -131,7 +148,14 @@ void Game::ProcessInput()
 
 void Game::Update()
 {
+	static float angle = 0.0f;
 
+	if (testTexture1 != nullptr)
+	{
+		testTexture1->m_Angle = angle;
+	}
+
+	angle += 0.1f;
 }
 
 void Game::Render()
@@ -141,6 +165,11 @@ void Game::Render()
 
 	// Use the colour just stated to clear the previous frame and fill in with that colour
 	SDL_RenderClear(m_RendererRef);
+
+	if (testTexture1 != nullptr)
+	{
+		testTexture1->Draw();
+	}
 
 	// Present the graphics to the renderer
 	SDL_RenderPresent(m_RendererRef);

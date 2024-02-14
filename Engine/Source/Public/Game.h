@@ -3,6 +3,7 @@
 // Forward declaration
 struct SDL_Window;
 struct SDL_Renderer;
+class Texture;
 
 class Game
 {
@@ -66,4 +67,7 @@ private:
 
 	// Stores the renderer
 	SDL_Renderer* m_RendererRef;
+
+	// DEBUG TESTING VARIABLES
+	Texture* testTexture1;
 };

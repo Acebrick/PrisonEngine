@@ -11,14 +11,14 @@ Texture::Texture(SDL_Renderer* renderer)
 	m_PosX = m_PosY = 0;
 	m_SurfaceData = nullptr;
 	m_TextureRef = nullptr;
-	scale = 1;
+	m_Scale = 1;
 }
 
 bool Texture::ImportTexture(const char* pathToFile)
 {
 	// Store path file
 	m_Path = pathToFile;
-
+	 
 	// Import image and convert to surface
 	// Fill in object with data for the image
 	m_SurfaceData = IMG_Load(pathToFile);
@@ -54,7 +54,7 @@ void Texture::Draw()
 
 	SDL_FRect destRect = {
 		(float)m_PosX, (float)m_PosY,
-		imageWidth * scale, imageHeight * scale
+		imageWidth * m_Scale, imageHeight * m_Scale
 	};
 
 	SDL_FPoint center{
