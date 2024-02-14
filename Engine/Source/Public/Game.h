@@ -70,4 +70,15 @@ private:
 
 	// DEBUG TESTING VARIABLES
 	Texture* testTexture1;
+	Texture* testTexture2;
+	Texture* testTexture3;
+	Texture* testTexture4;
+	Texture* testTexture5;
+	Texture* testTexture6;
+	Texture* testTexture7;
+	Texture* testTexture8;
+	Texture* testTexture9;
+	Texture* testTexture10;
+
+	void printHelloWorld();
 };

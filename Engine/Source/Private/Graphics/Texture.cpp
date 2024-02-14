@@ -58,8 +58,8 @@ void Texture::Draw()
 	};
 
 	SDL_FPoint center{
-		destRect.w / 2,
-		destRect.h / 2
+		1920 / 2,
+		1080 / 2
 	};
 
 	SDL_RenderCopyExF(

@@ -27,6 +27,15 @@ Game::Game()
 
 	// Debug variables
 	testTexture1 = nullptr;
+	testTexture2 = nullptr;
+	testTexture3 = nullptr;
+	testTexture4 = nullptr;
+	testTexture5 = nullptr;
+	testTexture6 = nullptr;
+	testTexture7 = nullptr;
+	testTexture8 = nullptr;
+	testTexture9 = nullptr;
+	testTexture10 = nullptr;
 }
 
 Game::~Game()
@@ -77,19 +86,8 @@ void Game::Start()
 		return;
 	}
 	
-	// Debug
-	testTexture1 = new Texture(m_RendererRef);
-	if (!testTexture1->ImportTexture("Content/Letters/DBlue.png"))
-	{
-		testTexture1->Cleanup();
-		delete testTexture1;
-		testTexture1 = nullptr;
-	}
-	else
-	{
-		testTexture1->m_PosX = 100.0f;
-		testTexture1->m_PosY = 190.0f;
-	}
+	// DEBUG
+	printHelloWorld();
 
 	GameLoop();
 }
@@ -154,8 +152,44 @@ void Game::Update()
 	{
 		testTexture1->m_Angle = angle;
 	}
+	if (testTexture2 != nullptr)
+	{
+		testTexture2->m_Angle = angle;
+	}
+	if (testTexture3 != nullptr)
+	{
+		testTexture3->m_Angle = angle;
+	}
+	if (testTexture4 != nullptr)
+	{
+		testTexture4->m_Angle = angle;
+	}
+	if (testTexture5 != nullptr)
+	{
+		testTexture5->m_Angle = angle;
+	}
+	if (testTexture6 != nullptr)
+	{
+		testTexture6->m_Angle = angle;
+	}
+	if (testTexture7 != nullptr)
+	{
+		testTexture7->m_Angle = angle;
+	}
+	if (testTexture8 != nullptr)
+	{
+		testTexture8->m_Angle = angle;
+	}
+	if (testTexture9 != nullptr)
+	{
+		testTexture9->m_Angle = angle;
+	}
+	if (testTexture10 != nullptr)
+	{
+		testTexture10->m_Angle = angle;
+	}
 
-	angle += 0.1f;
+	angle += 0.5f;
 }
 
 void Game::Render()
@@ -166,9 +200,46 @@ void Game::Render()
 	// Use the colour just stated to clear the previous frame and fill in with that colour
 	SDL_RenderClear(m_RendererRef);
 
+	// DEBUG
 	if (testTexture1 != nullptr)
 	{
 		testTexture1->Draw();
+	}	
+	if (testTexture2 != nullptr)
+	{
+		testTexture2->Draw();
+	}
+	if (testTexture3 != nullptr)
+	{
+		testTexture3->Draw();
+	}
+	if (testTexture4 != nullptr)
+	{
+		testTexture4->Draw();
+	}
+	if (testTexture5 != nullptr)
+	{
+		testTexture5->Draw();
+	}
+	if (testTexture6 != nullptr)
+	{
+		testTexture6->Draw();
+	}
+	if (testTexture7 != nullptr)
+	{
+		testTexture7->Draw();
+	}
+	if (testTexture8 != nullptr)
+	{
+		testTexture8->Draw();
+	}
+	if (testTexture9 != nullptr)
+	{
+		testTexture9->Draw();
+	}
+	if (testTexture10 != nullptr)
+	{
+		testTexture10->Draw();
 	}
 
 	// Present the graphics to the renderer
@@ -178,4 +249,158 @@ void Game::Render()
 void Game::CollectGarbage()
 {
 	
+}
+
+void Game::printHelloWorld()
+{
+	// Debug
+	//H
+	testTexture1 = new Texture(m_RendererRef);
+	if (!testTexture1->ImportTexture("Content/Letters/HBlue.png"))
+	{
+		testTexture1->Cleanup();
+		delete testTexture1;
+		testTexture1 = nullptr;
+	}
+	else
+	{
+		testTexture1->m_PosX = 50.0f;
+		testTexture1->m_PosY = 190.0f;
+		testTexture1->m_Scale = 1.5f;
+	}
+
+	//E
+	testTexture2 = new Texture(m_RendererRef);
+	if (!testTexture2->ImportTexture("Content/Letters/ERed.png"))
+	{
+		testTexture2->Cleanup();
+		delete testTexture2;
+		testTexture2 = nullptr;
+	}
+	else
+	{
+		testTexture2->m_PosX = 250.0f;
+		testTexture2->m_PosY = 285.0f;
+		testTexture2->m_Scale = 0.7f;
+	}
+
+	//L
+	testTexture3 = new Texture(m_RendererRef);
+	if (!testTexture3->ImportTexture("Content/Letters/LRed.png"))
+	{
+		testTexture3->Cleanup();
+		delete testTexture3;
+		testTexture3 = nullptr;
+	}
+	else
+	{
+		testTexture3->m_PosX = 350.0f;
+		testTexture3->m_PosY = 285.0f;
+		testTexture3->m_Scale = 0.7f;
+	}
+
+	//L2
+	testTexture4 = new Texture(m_RendererRef);
+	if (!testTexture4->ImportTexture("Content/Letters/LRed.png"))
+	{
+		testTexture4->Cleanup();
+		delete testTexture4;
+		testTexture4 = nullptr;
+	}
+	else
+	{
+		testTexture4->m_PosX = 450.0f;
+		testTexture4->m_PosY = 285.0f;
+		testTexture4->m_Scale = 0.7f;
+	}
+
+	//O
+	testTexture5 = new Texture(m_RendererRef);
+	if (!testTexture5->ImportTexture("Content/Letters/ORed.png"))
+	{
+		testTexture5->Cleanup();
+		delete testTexture5;
+		testTexture5 = nullptr;
+	}
+	else
+	{
+		testTexture5->m_PosX = 550.0f;
+		testTexture5->m_PosY = 285.0f;
+		testTexture5->m_Scale = 0.7f;
+	}
+
+	//W
+	testTexture6 = new Texture(m_RendererRef);
+	if (!testTexture6->ImportTexture("Content/Letters/WBlue.png"))
+	{
+		testTexture6->Cleanup();
+		delete testTexture6;
+		testTexture6 = nullptr;
+	}
+	else
+	{
+		testTexture6->m_PosX = 550.0f;
+		testTexture6->m_PosY = 500.0f;
+		testTexture6->m_Scale = 1.5f;
+	}
+
+	//O
+	testTexture7 = new Texture(m_RendererRef);
+	if (!testTexture7->ImportTexture("Content/Letters/ORed.png"))
+	{
+		testTexture7->Cleanup();
+		delete testTexture7;
+		testTexture7 = nullptr;
+	}
+	else
+	{
+		testTexture7->m_PosX = 750.0f;
+		testTexture7->m_PosY = 585.0f;
+		testTexture7->m_Scale = 0.7f;
+	}
+
+	//R
+	testTexture8 = new Texture(m_RendererRef);
+	if (!testTexture8->ImportTexture("Content/Letters/RRed.png"))
+	{
+		testTexture8->Cleanup();
+		delete testTexture8;
+		testTexture8 = nullptr;
+	}
+	else
+	{
+		testTexture8->m_PosX = 850.0f;
+		testTexture8->m_PosY = 585.0f;
+		testTexture8->m_Scale = 0.7f;
+	}
+
+	//L
+	testTexture9 = new Texture(m_RendererRef);
+	if (!testTexture9->ImportTexture("Content/Letters/LRed.png"))
+	{
+		testTexture9->Cleanup();
+		delete testTexture9;
+		testTexture9 = nullptr;
+	}
+	else
+	{
+		testTexture9->m_PosX = 950.0f;
+		testTexture9->m_PosY = 585.0f;
+		testTexture9->m_Scale = 0.7f;
+	}
+
+	//D
+	testTexture10 = new Texture(m_RendererRef);
+	if (!testTexture10->ImportTexture("Content/Letters/DRed.png"))
+	{
+		testTexture10->Cleanup();
+		delete testTexture10;
+		testTexture10 = nullptr;
+	}
+	else
+	{
+		testTexture10->m_PosX = 1050.0f;
+		testTexture10->m_PosY = 585.0f;
+		testTexture10->m_Scale = 0.7f;
+	}
 }
