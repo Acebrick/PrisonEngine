@@ -47,6 +47,13 @@ bool Texture::ImportTexture(const char* pathToFile)
 	return true;
 }
 
+void Texture::CopyTexture(Texture* copyTexture)
+{
+	m_Path = copyTexture->m_Path;
+	m_SurfaceData = copyTexture->m_SurfaceData;
+	m_TextureRef = copyTexture->m_TextureRef;
+}
+
 void Texture::Draw()
 {
 	float imageWidth = (float)m_SurfaceData->w;
@@ -88,3 +95,4 @@ void Texture::Cleanup()
 
 	EE_LOG("Texture", "Successfully destroyed image: " << m_Path);
 }
+

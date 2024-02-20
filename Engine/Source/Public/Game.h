@@ -1,5 +1,5 @@
 #pragma once
-
+#include "EngineTypes.h"
 // Forward declaration
 struct SDL_Window;
 struct SDL_Renderer;
@@ -7,8 +7,6 @@ class Texture;
 
 class Game
 {
-
-
 public:
 	// Get the game singleton or create one if it doesn't exist
 	static Game* GetGame();
@@ -20,6 +18,12 @@ public:
 	void Run() { Initialise(); };
 
 	void QuitApp() { isGameOpen = false; }
+
+	// Import texture to the game
+	Texture* ImportTexture(const char* pathToFile);
+
+	// Safe destory the texture
+	void DestroyTexture(Texture* textureToDestroy);
 
 private:
 							// Functions
@@ -67,6 +71,9 @@ private:
 
 	// Stores the renderer
 	SDL_Renderer* m_RendererRef;
+
+	// Store all of the textures in the game
+	TArray<Texture*> m_TextureStack;
 
 	// DEBUG TESTING VARIABLES
 	Texture* testTexture1;

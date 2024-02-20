@@ -20,6 +20,8 @@ public:
 	// Import and create a texture
 	bool ImportTexture(const char* pathToFile);
 
+	void CopyTexture(Texture* copyTexture);
+
 	// Draw the texture to the renderer
 	void Draw();
 

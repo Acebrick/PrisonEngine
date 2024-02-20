@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Debug.h" />
+    <ClInclude Include="Source\Public\EngineTypes.h" />
     <ClInclude Include="Source\Public\Game.h" />
     <ClInclude Include="Source\Public\Graphics\Texture.h" />
   </ItemGroup>
