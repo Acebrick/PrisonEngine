@@ -4,6 +4,9 @@
 #include "Debug.h"
 #include "Graphics/Texture.h"
 
+// DEBUG
+#include "Graphics/Animation.h"
+
 Game* Game::GetGame()
 {
 	// static = only run initialisation once
@@ -17,6 +20,83 @@ void Game::DestroyGame()
 	delete GetGame();
 }
 
+Texture* Game::ImportTexture(const char* pathToFile)
+{
+	Texture* newTexture = new Texture(m_RendererRef);
+
+	// Loop through all of the textures in the game
+	for (Texture * texRef : m_TextureStack)
+	{
+		if (std::strcmp(texRef->GetPath(), pathToFile) == 0)
+		{
+			// If there was a matching path, copt the successfully matched element
+			newTexture->CopyTexture(texRef);
+
+			// Add it to the texture stack
+			m_TextureStack.push_back(newTexture);
+			
+			// Return the new texture here to ignore the rest of the function
+			return newTexture;
+		}
+	}
+
+	// Attempt to import the texture
+	if (!newTexture->ImportTexture(pathToFile))
+	{
+		// If it failed then delete and update new texture to nullptr
+		delete newTexture;
+		newTexture = nullptr;
+	}
+	else
+	{
+		// If the import was successful
+		m_TextureStack.push_back(newTexture);
+	}
+
+	return newTexture;
+}
+
+void Game::DestroyTexture(Texture* textureToDestroy)
+{
+	int texturesFound = 0;
+
+	 // Loop through all of the textures
+	for (Texture* texRef : m_TextureStack)
+	{
+		// If the texture has a matching path
+		if (std::strcmp(textureToDestroy->GetPath(), texRef->GetPath()) == 0)
+		{
+			++texturesFound;
+
+			if (texturesFound > 1)
+			{
+				break;
+			}
+		}
+	}
+
+	// If there is not a copy, deallocate all memory related to the texture
+	if (texturesFound <= 1)
+	{
+		textureToDestroy->Cleanup();
+	}
+
+	// Find the texture in the array
+	TArray<Texture*>::iterator it = std::find(m_TextureStack.begin(), m_TextureStack.end(), textureToDestroy);
+
+	// If we find the texture
+	if (it != m_TextureStack.end()) 
+	{
+		m_TextureStack.erase(it);
+	}
+
+	// Remove the texture object from memory
+	delete textureToDestroy;
+	textureToDestroy = nullptr;
+
+	EE_LOG("Game", "Texture has been destroyed");
+}
+
 Game::Game()
 {
 	printf("Game created\n");
@@ -26,16 +106,7 @@ Game::Game()
 	m_RendererRef = nullptr;
 
 	// Debug variables
-	testTexture1 = nullptr;
-	testTexture2 = nullptr;
-	testTexture3 = nullptr;
-	testTexture4 = nullptr;
-	testTexture5 = nullptr;
-	testTexture6 = nullptr;
-	testTexture7 = nullptr;
-	testTexture8 = nullptr;
-	testTexture9 = nullptr;
-	testTexture10 = nullptr;
+	m_TestAnim1 = nullptr;
 }
 
 Game::~Game()
@@ -110,6 +181,11 @@ void Game::GameLoop()
 
 void Game::Cleanup()
 {
+	for (int i = m_TextureStack.size() - 1; i > -1; --i)
+	{
+		DestroyTexture(m_TextureStack[i]);
+	}
+
 	// Does the renderer exist
 	if (m_RendererRef != nullptr)
 	{
@@ -146,50 +222,21 @@ void Game::ProcessInput()
 
 void Game::Update()
 {
-	static float angle = 0.0f;
+	// Record the previous frame time
+	static double lastTickTime = 0.0;
+	// Record the current frame
+	double currentTickTime = (double)SDL_GetTicks64();
+	// Get the delta time - how much time has passed since the last frame
+	double longDelta = currentTickTime - lastTickTime;
+	// Convert from milliseconds to seconds
+	double deltaTime = longDelta / 1000.0;
+	// Set the last tick time
+	lastTickTime = currentTickTime;
 
-	if (testTexture1 != nullptr)
+	if (m_TestAnim1 != nullptr)
 	{
-		testTexture1->m_Angle = angle;
+		m_TestAnim1->Update((float)deltaTime);
 	}
-	if (testTexture2 != nullptr)
-	{
-		testTexture2->m_Angle = angle;
-	}
-	if (testTexture3 != nullptr)
-	{
-		testTexture3->m_Angle = angle;
-	}
-	if (testTexture4 != nullptr)
-	{
-		testTexture4->m_Angle = angle;
-	}
-	if (testTexture5 != nullptr)
-	{
-		testTexture5->m_Angle = angle;
-	}
-	if (testTexture6 != nullptr)
-	{
-		testTexture6->m_Angle = angle;
-	}
-	if (testTexture7 != nullptr)
-	{
-		testTexture7->m_Angle = angle;
-	}
-	if (testTexture8 != nullptr)
-	{
-		testTexture8->m_Angle = angle;
-	}
-	if (testTexture9 != nullptr)
-	{
-		testTexture9->m_Angle = angle;
-	}
-	if (testTexture10 != nullptr)
-	{
-		testTexture10->m_Angle = angle;
-	}
-
-	angle += 0.5f;
 }
 
 void Game::Render()
@@ -200,46 +247,13 @@ void Game::Render()
 	// Use the colour just stated to clear the previous frame and fill in with that colour
 	SDL_RenderClear(m_RendererRef);
 
-	// DEBUG
-	if (testTexture1 != nullptr)
+	// TODO: Render custom graphics
+	for (Texture* texRef : m_TextureStack) // for each loop syntax "(dataType iteratorName : array/vector to iterate) auto iterates array/vector and executes loops code
 	{
-		testTexture1->Draw();
-	}	
-	if (testTexture2 != nullptr)
-	{
-		testTexture2->Draw();
-	}
-	if (testTexture3 != nullptr)
-	{
-		testTexture3->Draw();
-	}
-	if (testTexture4 != nullptr)
-	{
-		testTexture4->Draw();
-	}
-	if (testTexture5 != nullptr)
-	{
-		testTexture5->Draw();
-	}
-	if (testTexture6 != nullptr)
-	{
-		testTexture6->Draw();
-	}
-	if (testTexture7 != nullptr)
-	{
-		testTexture7->Draw();
-	}
-	if (testTexture8 != nullptr)
-	{
-		testTexture8->Draw();
-	}
-	if (testTexture9 != nullptr)
-	{
-		testTexture9->Draw();
-	}
-	if (testTexture10 != nullptr)
-	{
-		testTexture10->Draw();
+		if (texRef != nullptr)
+		{
+			texRef->Draw();
+		}
 	}
 
 	// Present the graphics to the renderer
@@ -253,154 +267,19 @@ void Game::CollectGarbage()
 
 void Game::printHelloWorld()
 {
-	// Debug
-	//H
-	testTexture1 = new Texture(m_RendererRef);
-	if (!testTexture1->ImportTexture("Content/Letters/HBlue.png"))
-	{
-		testTexture1->Cleanup();
-		delete testTexture1;
-		testTexture1 = nullptr;
-	}
-	else
-	{
-		testTexture1->m_PosX = 50.0f;
-		testTexture1->m_PosY = 190.0f;
-		testTexture1->m_Scale = 1.5f;
-	}
+	AnimationParams AnimParams;
+	AnimParams.fps = 12.0f;
+	AnimParams.maxFrames = 5;
+	AnimParams.endFrame = 4; 
+	AnimParams.frameHeight = 48;
+	AnimParams.frameWidth = 48;
+	
 
-	//E
-	testTexture2 = new Texture(m_RendererRef);
-	if (!testTexture2->ImportTexture("Content/Letters/ERed.png"))
-	{
-		testTexture2->Cleanup();
-		delete testTexture2;
-		testTexture2 = nullptr;
-	}
-	else
-	{
-		testTexture2->m_PosX = 250.0f;
-		testTexture2->m_PosY = 285.0f;
-		testTexture2->m_Scale = 0.7f;
-	}
-
-	//L
-	testTexture3 = new Texture(m_RendererRef);
-	if (!testTexture3->ImportTexture("Content/Letters/LRed.png"))
-	{
-		testTexture3->Cleanup();
-		delete testTexture3;
-		testTexture3 = nullptr;
-	}
-	else
-	{
-		testTexture3->m_PosX = 350.0f;
-		testTexture3->m_PosY = 285.0f;
-		testTexture3->m_Scale = 0.7f;
-	}
-
-	//L2
-	testTexture4 = new Texture(m_RendererRef);
-	if (!testTexture4->ImportTexture("Content/Letters/LRed.png"))
-	{
-		testTexture4->Cleanup();
-		delete testTexture4;
-		testTexture4 = nullptr;
-	}
-	else
-	{
-		testTexture4->m_PosX = 450.0f;
-		testTexture4->m_PosY = 285.0f;
-		testTexture4->m_Scale = 0.7f;
-	}
-
-	//O
-	testTexture5 = new Texture(m_RendererRef);
-	if (!testTexture5->ImportTexture("Content/Letters/ORed.png"))
-	{
-		testTexture5->Cleanup();
-		delete testTexture5;
-		testTexture5 = nullptr;
-	}
-	else
-	{
-		testTexture5->m_PosX = 550.0f;
-		testTexture5->m_PosY = 285.0f;
-		testTexture5->m_Scale = 0.7f;
-	}
-
-	//W
-	testTexture6 = new Texture(m_RendererRef);
-	if (!testTexture6->ImportTexture("Content/Letters/WBlue.png"))
-	{
-		testTexture6->Cleanup();
-		delete testTexture6;
-		testTexture6 = nullptr;
-	}
-	else
-	{
-		testTexture6->m_PosX = 550.0f;
-		testTexture6->m_PosY = 500.0f;
-		testTexture6->m_Scale = 1.5f;
-	}
-
-	//O
-	testTexture7 = new Texture(m_RendererRef);
-	if (!testTexture7->ImportTexture("Content/Letters/ORed.png"))
-	{
-		testTexture7->Cleanup();
-		delete testTexture7;
-		testTexture7 = nullptr;
-	}
-	else
-	{
-		testTexture7->m_PosX = 750.0f;
-		testTexture7->m_PosY = 585.0f;
-		testTexture7->m_Scale = 0.7f;
-	}
-
-	//R
-	testTexture8 = new Texture(m_RendererRef);
-	if (!testTexture8->ImportTexture("Content/Letters/RRed.png"))
-	{
-		testTexture8->Cleanup();
-		delete testTexture8;
-		testTexture8 = nullptr;
-	}
-	else
-	{
-		testTexture8->m_PosX = 850.0f;
-		testTexture8->m_PosY = 585.0f;
-		testTexture8->m_Scale = 0.7f;
-	}
-
-	//L
-	testTexture9 = new Texture(m_RendererRef);
-	if (!testTexture9->ImportTexture("Content/Letters/LRed.png"))
-	{
-		testTexture9->Cleanup();
-		delete testTexture9;
-		testTexture9 = nullptr;
-	}
-	else
-	{
-		testTexture9->m_PosX = 950.0f;
-		testTexture9->m_PosY = 585.0f;
-		testTexture9->m_Scale = 0.7f;
-	}
-
-	//D
-	testTexture10 = new Texture(m_RendererRef);
-	if (!testTexture10->ImportTexture("Content/Letters/DRed.png"))
-	{
-		testTexture10->Cleanup();
-		delete testTexture10;
-		testTexture10 = nullptr;
-	}
-	else
-	{
-		testTexture10->m_PosX = 1050.0f;
-		testTexture10->m_PosY = 585.0f;
-		testTexture10->m_Scale = 0.7f;
-	}
+	// DEBUG
+	m_TestAnim1 = new Animation();
+	
+	m_TestAnim1->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Red/Gunner_Red_Idle.png",
+		&AnimParams);
+	m_TestAnim1->SetScale(3.0f);
+	m_TestAnim1->SetPosition(640, 360);
 }

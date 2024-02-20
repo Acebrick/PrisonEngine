@@ -1,14 +1,16 @@
 #pragma once
+#include "EngineTypes.h"
 
 // Forward declaration
 struct SDL_Window;
 struct SDL_Renderer;
 class Texture;
 
+// DEBUG
+class Animation;
+
 class Game
 {
-
-
 public:
 	// Get the game singleton or create one if it doesn't exist
 	static Game* GetGame();
@@ -21,18 +23,21 @@ public:
 
 	void QuitApp() { isGameOpen = false; }
 
+	// Import a texture to the game
+	Texture* ImportTexture(const char* pathToFile);
+
+	void DestroyTexture(Texture* textureToDestroy);
+
 private:
-							// Functions
-							
-	// Flag that decides when the game loop ends
+	// Functions
+
+// Flag that decides when the game loop ends
 	bool isGameOpen;
-
-
 
 	Game();
 	~Game();
-	
-							// Core game functions
+
+	// Core game functions
 
 	// Initialise the dependencies/external libraries
 	// This will exit the game if any fail
@@ -44,11 +49,11 @@ private:
 
 	// Run the game loop functions of the game until the app closes
 	void GameLoop();
-	
+
 	// Deallocate memory after the game loop has been exited
 	void Cleanup();
 
-								// Game loop
+	// Game loop
 
 	// Listen for user input and process
 	void ProcessInput();
@@ -68,17 +73,15 @@ private:
 	// Stores the renderer
 	SDL_Renderer* m_RendererRef;
 
+	TArray<Texture*> m_TextureStack;
+
 	// DEBUG TESTING VARIABLES
-	Texture* testTexture1;
-	Texture* testTexture2;
-	Texture* testTexture3;
-	Texture* testTexture4;
-	Texture* testTexture5;
-	Texture* testTexture6;
-	Texture* testTexture7;
-	Texture* testTexture8;
-	Texture* testTexture9;
-	Texture* testTexture10;
+	Animation* m_TestAnim1;
+	Animation* m_TestAnim2;
+	Animation* m_TestAnim3;
+	Animation* m_TestAnim4;
+	Animation* m_TestAnim5;
 
 	void printHelloWorld();
+
 };
