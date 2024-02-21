@@ -246,6 +246,10 @@ void Game::Update()
 		m_TestAnim2->Update((float)deltaTime);
 		m_TestAnim2->MoveObject(m_TestAnim2, deltaTime);
 	}
+	if (m_TestAnim3 != nullptr)
+	{
+		m_TestAnim3->Update((float)deltaTime);
+	}
 }
 
 void Game::Render()
@@ -276,33 +280,42 @@ void Game::CollectGarbage()
 
 void Game::DisplayAnimations()
 {
-	AnimationParams AnimIdle;
-	AnimIdle.fps = 12.0f;
-	AnimIdle.maxFrames = 5;
-	AnimIdle.endFrame = 4; 
-	AnimIdle.frameHeight = 48;
-	AnimIdle.frameWidth = 48;
-	
+	AnimationParams anim;
 
-	// DEBUG
+	// Idle
+	anim.fps = 12.0f;
+	anim.maxFrames = 5;
+	anim.endFrame = 4;
+	anim.frameHeight = 48;
+	anim.frameWidth = 48;
+
 	m_TestAnim1 = new Animation();
-	
 	m_TestAnim1->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Red/Gunner_Red_Idle.png",
-		&AnimIdle);
+		&anim);
 	m_TestAnim1->SetScale(3.0f);
 	m_TestAnim1->SetPosition(640, 360);
 
+
+	// Run
+	
+	anim.fps = 6.0f;
+	anim.maxFrames = 6;
+	anim.endFrame = 5;
+	anim.frameHeight = 48;
+	anim.frameWidth = 48;
+
+
 	m_TestAnim2 = new Animation();
-
-	AnimationParams AnimRun;
-	AnimRun.fps = 6.0f;
-	AnimRun.maxFrames = 5;
-	AnimRun.endFrame = 4;
-	AnimRun.frameHeight = 48;
-	AnimRun.frameWidth = 48;
-
-	m_TestAnim2->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Green/Gunner_Green_Idle.png",
-		&AnimRun);
+	m_TestAnim2->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Green/Gunner_Green_Run.png",
+		&anim);
 	m_TestAnim2->SetScale(3.0f);
 	m_TestAnim2->SetPosition(640, 180);
+
+	m_TestAnim3 = new Animation();
+	m_TestAnim3->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Green/Gunner_Green_Run.png",
+		&anim);
+	m_TestAnim3->SetScale(3.0f);
+	m_TestAnim3->SetPosition(640, 540);
+
 }
+

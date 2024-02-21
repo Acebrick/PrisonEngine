@@ -57,4 +57,6 @@ public:
 	void SetScale(float scale);
 
 	void MoveObject(Animation* anim, float deltaTime);
+
+	
 };
