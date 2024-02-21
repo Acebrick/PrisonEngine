@@ -55,4 +55,6 @@ public:
 	void SetRotation(float angle);
 
 	void SetScale(float scale);
+
+	void MoveObject(Animation* anim, float deltaTime);
 };

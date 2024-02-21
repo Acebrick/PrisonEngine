@@ -116,3 +116,8 @@ void Animation::SetScale(float scale)
 
 	m_TextureRef->m_Scale = scale;
 }
+
+void Animation::MoveObject(Animation* anim, float deltaTime)
+{
+	anim->m_TextureRef->m_PosX += 100 * deltaTime;
+}

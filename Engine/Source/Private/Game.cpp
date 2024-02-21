@@ -162,7 +162,7 @@ void Game::Start()
 	}
 	
 	// DEBUG
-	printHelloWorld();
+	DisplayAnimations();
 
 	GameLoop();
 }
@@ -244,16 +244,7 @@ void Game::Update()
 	if (m_TestAnim2 != nullptr)
 	{
 		m_TestAnim2->Update((float)deltaTime);
-		
-		MoveTexture(m_TestAnim2, "run");
-	}
-}
-
-void Game::MoveTexture(Animation* anim, const char* animation)
-{
-	if (animation == "run")
-	{
-		
+		m_TestAnim2->MoveObject(m_TestAnim2, deltaTime);
 	}
 }
 
@@ -283,7 +274,7 @@ void Game::CollectGarbage()
 	
 }
 
-void Game::printHelloWorld()
+void Game::DisplayAnimations()
 {
 	AnimationParams AnimIdle;
 	AnimIdle.fps = 12.0f;

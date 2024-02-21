@@ -9,7 +9,7 @@ class Texture
 {
 public:
 	// Variables
-	int m_PosX, m_PosY;
+	float m_PosX, m_PosY;
 	float m_Scale;
 
 	// Rotation of the image
