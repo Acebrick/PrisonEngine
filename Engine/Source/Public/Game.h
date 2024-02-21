@@ -28,6 +28,8 @@ public:
 
 	void DestroyTexture(Texture* textureToDestroy);
 
+	void MoveTexture(Animation* anim, const char* animation);
+
 private:
 	// Functions
 

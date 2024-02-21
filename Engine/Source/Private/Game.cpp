@@ -107,6 +107,10 @@ Game::Game()
 
 	// Debug variables
 	m_TestAnim1 = nullptr;
+	m_TestAnim2 = nullptr;
+	m_TestAnim3 = nullptr;
+	m_TestAnim4 = nullptr;
+	m_TestAnim5 = nullptr;
 }
 
 Game::~Game()
@@ -237,6 +241,20 @@ void Game::Update()
 	{
 		m_TestAnim1->Update((float)deltaTime);
 	}
+	if (m_TestAnim2 != nullptr)
+	{
+		m_TestAnim2->Update((float)deltaTime);
+		
+		MoveTexture(m_TestAnim2, "run");
+	}
+}
+
+void Game::MoveTexture(Animation* anim, const char* animation)
+{
+	if (animation == "run")
+	{
+		
+	}
 }
 
 void Game::Render()
@@ -267,19 +285,33 @@ void Game::CollectGarbage()
 
 void Game::printHelloWorld()
 {
-	AnimationParams AnimParams;
-	AnimParams.fps = 12.0f;
-	AnimParams.maxFrames = 5;
-	AnimParams.endFrame = 4; 
-	AnimParams.frameHeight = 48;
-	AnimParams.frameWidth = 48;
+	AnimationParams AnimIdle;
+	AnimIdle.fps = 12.0f;
+	AnimIdle.maxFrames = 5;
+	AnimIdle.endFrame = 4; 
+	AnimIdle.frameHeight = 48;
+	AnimIdle.frameWidth = 48;
 	
 
 	// DEBUG
 	m_TestAnim1 = new Animation();
 	
 	m_TestAnim1->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Red/Gunner_Red_Idle.png",
-		&AnimParams);
+		&AnimIdle);
 	m_TestAnim1->SetScale(3.0f);
 	m_TestAnim1->SetPosition(640, 360);
+
+	m_TestAnim2 = new Animation();
+
+	AnimationParams AnimRun;
+	AnimRun.fps = 6.0f;
+	AnimRun.maxFrames = 5;
+	AnimRun.endFrame = 4;
+	AnimRun.frameHeight = 48;
+	AnimRun.frameWidth = 48;
+
+	m_TestAnim2->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Green/Gunner_Green_Idle.png",
+		&AnimRun);
+	m_TestAnim2->SetScale(3.0f);
+	m_TestAnim2->SetPosition(640, 180);
 }
