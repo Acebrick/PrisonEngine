@@ -11,6 +11,7 @@ public:
 	// Variables
 	float m_PosX, m_PosY;
 	float m_Scale;
+	bool imageFlipped = false;
 
 	// Rotation of the image
 	float m_Angle;
@@ -24,7 +25,7 @@ public:
 	void CopyTexture(Texture* copyTexture);
 
 	// Draw the texture to the renderer
-	void Draw();
+	void Draw(bool textureFlipped);
 
 	// Deallocate memory
 	void Cleanup();
@@ -33,7 +34,7 @@ public:
 	const char* GetPath() const { return m_Path; }
 
 	// Set the clip for the texture
-	void SetClip(int x, int y, int w, int h);
+	void SetClip(int x, int y, int w, int h, int z);
 
 private:
 	// Variables

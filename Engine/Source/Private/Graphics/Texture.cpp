@@ -63,8 +63,19 @@ void Texture::CopyTexture(Texture* copyTexture)
 	m_TextureRef = copyTexture->m_TextureRef;
 }
 
-void Texture::Draw()
+void Texture::Draw(bool textureFlipped)
 {
+	// Is the image flipped
+	static SDL_RendererFlip flip;
+	if (textureFlipped)
+	{
+		flip = SDL_FLIP_HORIZONTAL;
+	}
+	else
+	{
+		flip = SDL_FLIP_NONE;
+	}
+
 	float imageWidth = (float)m_SurfaceData->w;
 	float imageHeight = (float)m_SurfaceData->h;
 
@@ -90,13 +101,13 @@ void Texture::Draw()
 	};
 
 	SDL_RenderCopyExF(
-		m_RendererRef, // Render to draw to
-		m_TextureRef, // The texture to draw to the renderer
-		m_ClipRect, // Clip rect
-		&destRect, // Position and scale on the screen
-		m_Angle, // rotation of the texture
-		&center, // center point for the rotation
-		SDL_FLIP_NONE); // flip the texture vertical or horizontal
+	m_RendererRef, // Render to draw to
+	m_TextureRef, // The texture to draw to the renderer
+	m_ClipRect, // Clip rect
+	&destRect, // Position and scale on the screen
+	m_Angle, // rotation of the texture
+	&center, // center point for the rotation
+	flip); // flip the texture vertical or horizontal
 }
 
 void Texture::Cleanup()
@@ -116,7 +127,7 @@ void Texture::Cleanup()
 	EE_LOG("Texture", "Successfully destroyed image: " << m_Path);
 }
 
-void Texture::SetClip(int x, int y, int w, int h)
+void Texture::SetClip(int x, int y, int w, int h, int z)
 {
 
 	if (m_ClipRect == nullptr)
@@ -130,4 +141,5 @@ void Texture::SetClip(int x, int y, int w, int h)
 	m_ClipRect->y = y;
 	m_ClipRect->w = w;
 	m_ClipRect->h = h;
+
 }

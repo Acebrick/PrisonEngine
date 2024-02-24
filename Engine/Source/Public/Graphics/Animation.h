@@ -56,7 +56,13 @@ public:
 
 	void SetScale(float scale);
 
-	void MoveObject(Animation* anim, float deltaTime);
+	void gunnerRunning(Animation* anim, Animation* bullet, float deltaTime);
 
-	
+	bool jetpackGunner(Animation* character, Animation* jetpackEffect, Animation* bullet, Animation* enemy, Animation* muzzleFlash, float deltaTime);
+
+	AnimationParams* AnimTypeDefinitions(int animType, AnimationParams& anim);
+
+	bool ShootBullet(Animation* bullet, Animation* character, Animation* enemy, Animation* muzzleFlash, float deltaTime);
+
+	static bool gunnerDead(Animation* character);
 };

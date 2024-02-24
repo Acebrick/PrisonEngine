@@ -76,12 +76,14 @@ private:
 	TArray<Texture*> m_TextureStack;
 
 	// DEBUG TESTING VARIABLES
-	Animation* m_TestAnim1;
-	Animation* m_TestAnim2;
-	Animation* m_TestAnim3;
-	Animation* m_TestAnim4;
-	Animation* m_TestAnim5;
-
-	void DisplayAnimations();
-
+	Animation* m_GunnerBlackRun;
+	Animation* m_JetpackGunner;
+	Animation* m_PlatformTop;
+	Animation* m_PlatformMid;
+	Animation* m_PlatformBottom;
+	Animation* m_JetpackEffect;
+	Animation* m_Bullet;
+	Animation* m_MuzzleFlash;
+	Animation* m_GunnerBlackDead;
+	Animation* m_GunnerGreenIdle;
 };
