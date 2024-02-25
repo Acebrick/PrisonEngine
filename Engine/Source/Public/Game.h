@@ -77,10 +77,6 @@ private:
 
 	// DEBUG TESTING VARIABLES
 	Animation* m_TestAnim1;
-	Animation* m_TestAnim2;
-	Animation* m_TestAnim3;
-	Animation* m_TestAnim4;
-	Animation* m_TestAnim5;
 
 	void printHelloWorld();
 

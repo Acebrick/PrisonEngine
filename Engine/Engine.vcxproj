@@ -99,6 +99,7 @@
     <ClCompile Include="Source\Private\Game.cpp" />
     <ClCompile Include="Source\Private\Graphics\Animation.cpp" />
     <ClCompile Include="Source\Private\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\Private\Math\Vector2.cpp" />
     <ClCompile Include="Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,7 @@
     <ClInclude Include="Source\Public\Game.h" />
     <ClInclude Include="Source\Public\Graphics\Animation.h" />
     <ClInclude Include="Source\Public\Graphics\Texture.h" />
+    <ClInclude Include="Source\Public\Math\Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

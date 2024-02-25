@@ -6,6 +6,7 @@
 
 // DEBUG
 #include "Graphics/Animation.h"
+#include "Math/Vector2.h"
 
 Game* Game::GetGame()
 {
@@ -158,7 +159,21 @@ void Game::Start()
 	}
 	
 	// DEBUG
-	printHelloWorld();
+	AnimationParams AnimParams;
+	AnimParams.fps = 12.0f;
+	AnimParams.maxFrames = 5;
+	AnimParams.endFrame = 4;
+	AnimParams.frameHeight = 48;
+	AnimParams.frameWidth = 48;
+
+
+	// DEBUG
+	m_TestAnim1 = new Animation();
+
+	m_TestAnim1->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Red/Gunner_Red_Idle.png",
+		&AnimParams);
+	m_TestAnim1->SetScale(3.0f);
+	m_TestAnim1->SetPosition(640, 360);
 
 	GameLoop();
 }
@@ -233,8 +248,18 @@ void Game::Update()
 	// Set the last tick time
 	lastTickTime = currentTickTime;
 
+	// DEBUG
+
+	// Position of the animation on the screen
+	static Vector2 position(640.0f, 360.0f); // same as variable = value
+	float speed = 100.0f * (float)deltaTime;
+
+	// Move animation to the right
+	position.x += speed;
+
 	if (m_TestAnim1 != nullptr)
 	{
+		m_TestAnim1->SetPosition(position.x, position.y);
 		m_TestAnim1->Update((float)deltaTime);
 	}
 }
@@ -267,19 +292,5 @@ void Game::CollectGarbage()
 
 void Game::printHelloWorld()
 {
-	AnimationParams AnimParams;
-	AnimParams.fps = 12.0f;
-	AnimParams.maxFrames = 5;
-	AnimParams.endFrame = 4; 
-	AnimParams.frameHeight = 48;
-	AnimParams.frameWidth = 48;
-	
 
-	// DEBUG
-	m_TestAnim1 = new Animation();
-	
-	m_TestAnim1->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Red/Gunner_Red_Idle.png",
-		&AnimParams);
-	m_TestAnim1->SetScale(3.0f);
-	m_TestAnim1->SetPosition(640, 360);
 }
