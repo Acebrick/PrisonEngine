@@ -153,7 +153,7 @@ bool Animation::jetpackGunner(Animation* jetpackGunner, Animation* jetpackEffect
 	{
 		jetpackSpeed = -250;
 		// Restart jetpack effect when ascending
-		jetpackEffect->m_AnimParams->frameHeight = 48;
+		jetpackEffect->SetScale(1.5f);
 		
 	} // Descend when reaching the top of the screen
 	if (jetpackGunner->m_TextureRef->m_PosY <= 50.0f)
@@ -161,7 +161,7 @@ bool Animation::jetpackGunner(Animation* jetpackGunner, Animation* jetpackEffect
 		jetpackSpeed = 500;
 
 		// Stop jetpack effect when falling
-		jetpackEffect->m_AnimParams->frameHeight = 0;
+		jetpackEffect->SetScale(0.0f);
 	}
 	
 	// Lock the jetpack effect to the space gunner
@@ -184,10 +184,9 @@ bool Animation::jetpackGunner(Animation* jetpackGunner, Animation* jetpackEffect
 bool Animation::ShootBullet(Animation* bullet, Animation* jetpackGunner, Animation* enemy, Animation* muzzleFlash, float deltaTime)
 {
 	float bulletSpeed = -800.0f;
-	static bool bulletShot = false;
 
 	// Only set position to character if a shot is taking place
-	if (!bulletShot)
+	if (jetpackGunner->m_TextureRef->m_PosY < 60)
 	{
 		// Position and scale of muzzle flash
 		muzzleFlash->SetPosition(jetpackGunner->m_TextureRef->m_PosX - 50, jetpackGunner->m_TextureRef->m_PosY);
@@ -195,7 +194,6 @@ bool Animation::ShootBullet(Animation* bullet, Animation* jetpackGunner, Animati
 		// Starting position and scale of bullet
 		bullet->SetPosition(jetpackGunner->m_TextureRef->m_PosX - 50, jetpackGunner->m_TextureRef->m_PosY);
 		bullet->SetScale(3.0f);
-		bulletShot = true;
 	}
 
 	// Move the bullet
@@ -209,15 +207,11 @@ bool Animation::ShootBullet(Animation* bullet, Animation* jetpackGunner, Animati
 
 	// Detect collision with bullet and die
 	if (bullet->m_TextureRef->m_PosX <= enemy->m_TextureRef->m_PosX &&
-		bullet->m_TextureRef->m_PosY >= enemy->m_TextureRef->m_PosY - 48 && bullet->m_TextureRef->m_PosY <= enemy->m_TextureRef->m_PosY + 48)
+		bullet->m_TextureRef->m_PosY >= enemy->m_TextureRef->m_PosY - 48 && bullet->m_TextureRef->m_PosY <= enemy->m_TextureRef->m_PosY + 48
+		&& enemy->m_TextureRef->GetPath() != "Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png")
 	{
-		bullet->m_TextureRef->m_Scale = 0;
+		bullet->SetScale(0.0f);
 		return true;
-	}
-
-	if (bullet->m_TextureRef->m_PosX < 0)
-	{
-		bulletShot = false;
 	}
 
 	return false;
@@ -230,8 +224,10 @@ bool Animation::gunnerDead(Animation* character)
 	// Only import texture if it has not yet been imported
 	if (!textureImported)
 	{
+		AnimationParams gunnerDead;
+		character->AnimTypeDefinitions(5, gunnerDead);
 		character->m_TextureRef->ImportTexture("Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png");
-		character->m_AnimParams = character->AnimTypeDefinitions(5, *character->m_AnimParams);
+		//character->m_AnimParams = character->AnimTypeDefinitions(5, *character->m_AnimParams);
 		textureImported = true;
 	}
 

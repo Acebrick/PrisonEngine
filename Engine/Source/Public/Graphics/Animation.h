@@ -56,7 +56,7 @@ public:
 
 	void SetScale(float scale);
 
-	void gunnerRunning(Animation* anim, Animation* bullet, float deltaTime);
+	void gunnerRunning(Animation* gunner, Animation* bullet, float deltaTime);
 
 	bool jetpackGunner(Animation* character, Animation* jetpackEffect, Animation* bullet, Animation* enemy, Animation* muzzleFlash, float deltaTime);
 

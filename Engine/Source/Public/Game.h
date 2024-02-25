@@ -76,7 +76,8 @@ private:
 	TArray<Texture*> m_TextureStack;
 
 	// DEBUG TESTING VARIABLES
-	Animation* m_GunnerBlackRun;
+	Animation* m_SpaceBackground;
+	Animation* m_GunnerBlack;
 	Animation* m_JetpackGunner;
 	Animation* m_PlatformTop;
 	Animation* m_PlatformMid;
@@ -84,6 +85,6 @@ private:
 	Animation* m_JetpackEffect;
 	Animation* m_Bullet;
 	Animation* m_MuzzleFlash;
-	Animation* m_GunnerBlackDead;
-	Animation* m_GunnerGreenIdle;
+	Animation* m_GunnerGreen;
+	Animation* m_GunnerRed;
 };

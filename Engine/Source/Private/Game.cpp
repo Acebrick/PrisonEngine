@@ -106,7 +106,7 @@ Game::Game()
 	m_RendererRef = nullptr;
 
 	// Debug variables
-	m_GunnerBlackRun = nullptr;
+	m_GunnerBlack = nullptr;
 	m_JetpackGunner = nullptr;
 	m_PlatformTop = nullptr;
 	m_PlatformMid = nullptr;
@@ -114,8 +114,8 @@ Game::Game()
 	m_JetpackEffect = nullptr;
 	m_Bullet = nullptr;
 	m_MuzzleFlash = nullptr;
-	m_GunnerBlackDead = nullptr;
-	m_GunnerGreenIdle = nullptr;
+	m_GunnerGreen = nullptr;
+	m_GunnerRed = nullptr;
 }
 
 Game::~Game()
@@ -169,6 +169,11 @@ void Game::Start()
 	// DEBUG
 
 	// Display background/Static textures
+	m_SpaceBackground = new Animation();
+	m_SpaceBackground->CreateAnimation("Content/Sprites/SpaceBackgrounds/Starfields/Starfield1.png");
+	m_SpaceBackground->SetScale(1.3f);
+	m_SpaceBackground->SetPosition(640, 360);
+
 	m_PlatformTop = new Animation();
 	m_PlatformTop->CreateAnimation("Content/Sprites/SpaceGunner/Extras/PlatformLong.png");
 	m_PlatformTop->SetPosition(500, 140);
@@ -189,35 +194,26 @@ void Game::Start()
 	AnimationParams gunnerIdle;
 	AnimationParams gunnerJump;
 	AnimationParams jetpackBoots;
-	AnimationParams gunnerDead;
 	
-	// Get values for animation parameters
-	m_GunnerBlackRun->AnimTypeDefinitions(0, gunnerIdle);
-	m_GunnerBlackRun->AnimTypeDefinitions(1, gunnerRun);
-	m_GunnerBlackRun->AnimTypeDefinitions(2, gunnerJump);
-	m_GunnerBlackRun->AnimTypeDefinitions(3, jetpackBoots);
-	m_GunnerBlackRun->AnimTypeDefinitions(5, gunnerDead);
-	
+	// Get values for animations
+	m_GunnerBlack->AnimTypeDefinitions(0, gunnerIdle);
+	m_GunnerBlack->AnimTypeDefinitions(1, gunnerRun);
+	m_GunnerBlack->AnimTypeDefinitions(2, gunnerJump);
+	m_GunnerBlack->AnimTypeDefinitions(3, jetpackBoots);
+;
 	// Animations
-	m_GunnerBlackRun = new Animation();
-	m_GunnerBlackRun->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Run.png",
-		&gunnerRun);
-	m_GunnerBlackRun->SetScale(3.0f);
-	m_GunnerBlackRun->SetPosition(640, 90);
-
-	m_GunnerBlackDead = new Animation();
-	m_GunnerBlackDead->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png",
-		&gunnerDead);
+	m_GunnerBlack = new Animation();
+	m_GunnerBlack->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Run.png", &gunnerRun);
+	m_GunnerBlack->SetScale(3.0f);
+	m_GunnerBlack->SetPosition(640, 90);
 
 	m_JetpackGunner = new Animation();
-	m_JetpackGunner->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Yellow/Gunner_Yellow_Jump.png",
-		&gunnerJump);
+	m_JetpackGunner->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Yellow/Gunner_Yellow_Jump.png", &gunnerJump);
 	m_JetpackGunner->SetScale(3.0f);
-	m_JetpackGunner->SetPosition(1050, 1000);
+	m_JetpackGunner->SetPosition(1200, 1000);
 
 	m_JetpackEffect = new Animation();
-	m_JetpackEffect->CreateAnimation("Content/Sprites/MainShip/Engine Effects/PNGs/Main Ship - Engines - Supercharged Engine - Powering.png",
-		&jetpackBoots);
+	m_JetpackEffect->CreateAnimation("Content/Sprites/MainShip/Engine Effects/PNGs/Main Ship - Engines - Supercharged Engine - Powering.png", &jetpackBoots);
 	m_JetpackEffect->SetScale(1.7f);
 
 	m_Bullet = new Animation();
@@ -227,6 +223,16 @@ void Game::Start()
 	m_MuzzleFlash = new Animation();
 	m_MuzzleFlash->CreateAnimation("Content/Sprites/SpaceGunner/Extras/MuzzleFlash.png", nullptr);
 	m_MuzzleFlash->SetScale(3.0f);
+
+	m_GunnerGreen = new Animation();
+	m_GunnerGreen->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Green/Gunner_Green_Idle.png", &gunnerIdle);
+	m_GunnerGreen->SetPosition(100, 290);
+	m_GunnerGreen->SetScale(3.0f);
+
+	m_GunnerRed = new Animation();
+	m_GunnerRed->CreateAnimation("Content/Sprites/SpaceGunner/CharacterSprites/Red/Gunner_Red_Run.png", &gunnerRun);
+	m_GunnerRed->SetPosition(350, 490);
+	m_GunnerRed->SetScale(3.0f);
 
 	GameLoop();
 }
@@ -304,27 +310,37 @@ void Game::Update()
 	static bool gunRunnerShot = false; // Trigger to play death animation
 	static bool gunRunnerDead = false; // Stop all gun runner animations/movement (look dead)
 
-	if (m_GunnerBlackRun != nullptr)
+	if (m_GunnerBlack != nullptr)
 	{
 		if (!gunRunnerShot)
 		{
-			m_GunnerBlackRun->Update((float)deltaTime);
-			m_GunnerBlackRun->gunnerRunning(m_GunnerBlackRun, m_Bullet, (float)deltaTime);
+			m_GunnerBlack->Update((float)deltaTime);
+			m_GunnerBlack->gunnerRunning(m_GunnerBlack, m_Bullet, (float)deltaTime);
 		}
 		else if (gunRunnerShot && !gunRunnerDead)
 		{
-			m_GunnerBlackRun->Update((float)deltaTime);
-			gunRunnerDead = m_GunnerBlackRun->gunnerDead(m_GunnerBlackRun);
+			m_GunnerBlack->Update((float)deltaTime);
+			gunRunnerDead = m_GunnerBlack->gunnerDead(m_GunnerBlack);
 		}
 	}
 	if (m_JetpackGunner != nullptr)
 	{
 		m_JetpackGunner->Update((float)deltaTime);
-		gunRunnerShot = m_JetpackGunner->jetpackGunner(m_JetpackGunner, m_JetpackEffect, m_Bullet, m_GunnerBlackRun, m_MuzzleFlash, (float)deltaTime);
+		if (m_JetpackGunner->jetpackGunner(m_JetpackGunner, m_JetpackEffect, m_Bullet, m_GunnerBlack, m_MuzzleFlash, (float)deltaTime))
+		gunRunnerShot = true;
 	}
 	if (m_JetpackEffect != nullptr)
 	{
 		m_JetpackEffect->Update((float)deltaTime);
+	}
+	if (m_GunnerGreen != nullptr)
+	{
+		m_GunnerGreen->Update((float)deltaTime);
+	}
+	if (m_GunnerRed != nullptr)
+	{
+		m_GunnerRed->Update((float)deltaTime);
+		m_GunnerRed->gunnerRunning(m_GunnerRed, m_Bullet, (float)deltaTime);
 	}
 }
 
