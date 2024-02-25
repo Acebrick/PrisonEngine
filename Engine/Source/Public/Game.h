@@ -87,4 +87,10 @@ private:
 	Animation* m_MuzzleFlash;
 	Animation* m_GunnerGreen;
 	Animation* m_GunnerRed;
+	Animation* m_Explosion;
+	Animation* m_SawTrap;
+	Animation* m_LightningTrap;
+	Animation* m_PlatformVertical1;
+	Animation* m_PlatformVertical2;
+	Animation* m_ToxicTrap;
 };

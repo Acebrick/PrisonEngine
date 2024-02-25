@@ -40,6 +40,8 @@ private:
 	// How much time has passed since the last animation frame
 	float m_FrameTimer;
 
+	int moveSpeed = 400;
+
 public:
 	Animation();
 	~Animation();
@@ -56,13 +58,15 @@ public:
 
 	void SetScale(float scale);
 
-	void gunnerRunning(Animation* gunner, Animation* bullet, float deltaTime);
+	void GunnerRunning(Animation* gunner, float deltaTime);
 
-	bool jetpackGunner(Animation* character, Animation* jetpackEffect, Animation* bullet, Animation* enemy, Animation* muzzleFlash, float deltaTime);
+	bool JetpackGunner(Animation* JetpackGunner, Animation* jetpackEffect, Animation* bullet, Animation* blackGunner, Animation* muzzleFlash, float deltaTime);
 
-	AnimationParams* AnimTypeDefinitions(int animType, AnimationParams& anim);
+	void AnimTypeDefinitions(int animType, AnimationParams& anim);
 
-	bool ShootBullet(Animation* bullet, Animation* character, Animation* enemy, Animation* muzzleFlash, float deltaTime);
+	bool ShootBullet(Animation* bullet, Animation* JetpackGunner, Animation* blackGunner, Animation* muzzleFlash, float deltaTime);
 
-	static bool gunnerDead(Animation* character);
+	static bool GunnerDead(Animation* character, Animation* explosion);
+
+	void DodgeSaw(Animation* saw, Animation* redGunner);
 };

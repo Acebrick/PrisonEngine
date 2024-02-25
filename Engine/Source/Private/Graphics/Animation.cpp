@@ -119,44 +119,42 @@ void Animation::SetScale(float scale)
 	m_TextureRef->m_Scale = scale;
 }
 
-void Animation::gunnerRunning(Animation* gunner, Animation* bullet, float deltaTime)
+void Animation::GunnerRunning(Animation* gunner, float deltaTime)
 {
-	static int runSpeed = 200;
-	static bool faceBack = false;
-
 	// Turn around and run other way when right side of screen is reached
 	if (gunner->m_TextureRef->m_PosX >= 950.0f)
 	{
-		runSpeed = -200;
+		gunner->moveSpeed = -400;
 		gunner->m_TextureRef->imageFlipped = true;
 	}
 	// Turn around and run other way when left side of screen is reached
 	if (gunner->m_TextureRef->m_PosX <= 50.0f)
 	{
-		runSpeed = 200;
+		gunner->moveSpeed = 400;
 		gunner->m_TextureRef->imageFlipped = false;
 	}
 
 	// Move the sprite
-	gunner->m_TextureRef->m_PosX += runSpeed * deltaTime;
+	gunner->m_TextureRef->m_PosX += gunner->moveSpeed * deltaTime;
 }
 
-bool Animation::jetpackGunner(Animation* jetpackGunner, Animation* jetpackEffect, Animation* bullet, Animation* enemy, Animation* muzzleFlash, float deltaTime)
+bool Animation::JetpackGunner(Animation* JetpackGunner, Animation* jetpackEffect, Animation* bullet, Animation* blackGunner, Animation* muzzleFlash, float deltaTime)
 {
 	// Start character flipped to face towards other space gunners
-	jetpackGunner->m_TextureRef->imageFlipped = true;
+	JetpackGunner->m_TextureRef->imageFlipped = true;
 
 	static int jetpackSpeed = -250;
 
 	// Ascend when reaching the bottom of the screen
-	if (jetpackGunner->m_TextureRef->m_PosY >= 680.0f)
+	if (JetpackGunner->m_TextureRef->m_PosY >= 680.0f)
 	{
 		jetpackSpeed = -250;
 		// Restart jetpack effect when ascending
 		jetpackEffect->SetScale(1.5f);
 		
-	} // Descend when reaching the top of the screen
-	if (jetpackGunner->m_TextureRef->m_PosY <= 50.0f)
+	} 
+	// Descend when reaching the top of the screen
+	if (JetpackGunner->m_TextureRef->m_PosY <= 50.0f)
 	{
 		jetpackSpeed = 500;
 
@@ -165,15 +163,15 @@ bool Animation::jetpackGunner(Animation* jetpackGunner, Animation* jetpackEffect
 	}
 	
 	// Lock the jetpack effect to the space gunner
-	jetpackEffect->SetPosition(jetpackGunner->m_TextureRef->m_PosX + 5, jetpackGunner->m_TextureRef->m_PosY + 23);
+	jetpackEffect->SetPosition(JetpackGunner->m_TextureRef->m_PosX + 5, JetpackGunner->m_TextureRef->m_PosY + 23);
 
 	// Move character sprite
-	jetpackGunner->m_TextureRef->m_PosY += jetpackSpeed * deltaTime;
+	JetpackGunner->m_TextureRef->m_PosY += jetpackSpeed * deltaTime;
 
 	static bool killConfirmed = false;
 
 	 // Enemy has been killed
-	if (ShootBullet(bullet, jetpackGunner, enemy, muzzleFlash, deltaTime))
+	if (ShootBullet(bullet, JetpackGunner, blackGunner, muzzleFlash, deltaTime))
 	{
 		return true;
 	}
@@ -181,57 +179,62 @@ bool Animation::jetpackGunner(Animation* jetpackGunner, Animation* jetpackEffect
 	return false;
 }
 
-bool Animation::ShootBullet(Animation* bullet, Animation* jetpackGunner, Animation* enemy, Animation* muzzleFlash, float deltaTime)
+bool Animation::ShootBullet(Animation* bullet, Animation* JetpackGunner, Animation* blackGunner, Animation* muzzleFlash, float deltaTime)
 {
 	float bulletSpeed = -800.0f;
 
 	// Only set position to character if a shot is taking place
-	if (jetpackGunner->m_TextureRef->m_PosY < 60)
+	if (JetpackGunner->m_TextureRef->m_PosY < 60)
 	{
 		// Position and scale of muzzle flash
-		muzzleFlash->SetPosition(jetpackGunner->m_TextureRef->m_PosX - 50, jetpackGunner->m_TextureRef->m_PosY);
+		muzzleFlash->SetPosition(JetpackGunner->m_TextureRef->m_PosX - 50, JetpackGunner->m_TextureRef->m_PosY);
 		muzzleFlash->SetScale(3.0f); 
 		// Starting position and scale of bullet
-		bullet->SetPosition(jetpackGunner->m_TextureRef->m_PosX - 50, jetpackGunner->m_TextureRef->m_PosY);
-		bullet->SetScale(3.0f);
+		bullet->SetPosition(JetpackGunner->m_TextureRef->m_PosX - 50, JetpackGunner->m_TextureRef->m_PosY);
+		bullet->SetScale(1.0f);
 	}
 
 	// Move the bullet
 	bullet->m_TextureRef->m_PosX += bulletSpeed * deltaTime;
 
 	// Hide muzzle flash
-	if (bullet->m_TextureRef->m_PosX < jetpackGunner->m_TextureRef->m_PosX - 100)
+	if (bullet->m_TextureRef->m_PosX < JetpackGunner->m_TextureRef->m_PosX - 100)
 	{
 		muzzleFlash->SetScale(0);
 	}
 
-	// Detect collision with bullet and die
-	if (bullet->m_TextureRef->m_PosX <= enemy->m_TextureRef->m_PosX &&
-		bullet->m_TextureRef->m_PosY >= enemy->m_TextureRef->m_PosY - 48 && bullet->m_TextureRef->m_PosY <= enemy->m_TextureRef->m_PosY + 48
-		&& enemy->m_TextureRef->GetPath() != "Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png")
-	{
+	// Detect collision with black gunner
+	if (bullet->m_TextureRef->m_PosX <= blackGunner->m_TextureRef->m_PosX &&
+		bullet->m_TextureRef->m_PosY >= blackGunner->m_TextureRef->m_PosY - 48 && bullet->m_TextureRef->m_PosY <= blackGunner->m_TextureRef->m_PosY + 48
+		&& blackGunner->m_TextureRef->GetPath() != "Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png")
+	{		
 		bullet->SetScale(0.0f);
 		return true;
 	}
-
 	return false;
 }
 
-bool Animation::gunnerDead(Animation* character)
+bool Animation::GunnerDead(Animation* character, Animation* explosion)
 {
 	static bool textureImported = false;
 
 	// Only import texture if it has not yet been imported
 	if (!textureImported)
 	{
-		AnimationParams gunnerDead;
-		character->AnimTypeDefinitions(5, gunnerDead);
+		AnimationParams GunnerDead;
+		character->AnimTypeDefinitions(5, GunnerDead);
 		character->m_TextureRef->ImportTexture("Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png");
-		//character->m_AnimParams = character->AnimTypeDefinitions(5, *character->m_AnimParams);
+		explosion->SetPosition(character->m_TextureRef->m_PosX, character->m_TextureRef->m_PosY);
 		textureImported = true;
 	}
 
-	// Stop animating when last frame is reached to look dead
+	// Stop animating explosion when last frame is reached
+	if (explosion->m_CurrentFrame == explosion->m_AnimParams->endFrame)
+	{
+		explosion->SetScale(0.0f);
+	}
+
+	// Force death animation to play only once
 	if (character->m_CurrentFrame == character->m_AnimParams->endFrame)
 	{
 		return true;
@@ -239,7 +242,47 @@ bool Animation::gunnerDead(Animation* character)
 	return false;
 }
 
-AnimationParams* Animation::AnimTypeDefinitions(int animType, AnimationParams& anim)
+void Animation::DodgeSaw(Animation* saw, Animation* redGunner)
+{
+	static bool isDodgingSaw = false;
+
+	// Dodge/crouch the saw when it's in range
+	if (saw->m_TextureRef->m_PosX >= redGunner->m_TextureRef->m_PosX - 150 &&
+		saw->m_TextureRef->m_PosX <= redGunner->m_TextureRef->m_PosX + 150)
+	{
+		isDodgingSaw = true;
+
+		if (redGunner->m_CurrentFrame == redGunner->m_AnimParams->startFrame)
+		{
+			// Start crouch animation
+			redGunner->m_AnimParams->fps = 6.0f;
+		}
+
+		// Maintain crouched position until saw has passed
+		if (redGunner->m_CurrentFrame == redGunner->m_AnimParams->endFrame)
+		{
+			redGunner->m_CurrentFrame = redGunner->m_AnimParams->endFrame;
+			redGunner->m_AnimParams->fps = 0.0f;
+		}
+	}
+	else
+	{
+		isDodgingSaw = false;
+	}
+
+	if (!isDodgingSaw && redGunner->m_CurrentFrame == redGunner->m_AnimParams->endFrame)
+	{
+		// Return gunner to standing position
+		redGunner->m_AnimParams->fps = 6.0f;
+	}
+	else if (!isDodgingSaw && redGunner->m_CurrentFrame == redGunner->m_AnimParams->startFrame)
+	{
+		// Stop crouch animation from looping
+		redGunner->m_AnimParams->fps = 0.0f;
+	}
+}
+
+void Animation::AnimTypeDefinitions(int animType, AnimationParams& anim)
 {
 	switch (animType) {
 	case 0: // Gunner idle
@@ -256,7 +299,7 @@ AnimationParams* Animation::AnimTypeDefinitions(int animType, AnimationParams& a
 		anim.frameHeight = 48;
 		anim.frameWidth = 48;
 		break;
-	case 2: // Gunner jumping
+	case 2: // Gunner jumping/flying
 		anim.fps = 6.0f;
 		anim.maxFrames = 2;
 		anim.endFrame = 1;
@@ -271,21 +314,55 @@ AnimationParams* Animation::AnimTypeDefinitions(int animType, AnimationParams& a
 		anim.frameWidth = 48;
 		break;
 	case 4: // Gunner crouch
-		anim.fps = 6.0f;
+		anim.fps = 0.0f;
 		anim.maxFrames = 3;
 		anim.endFrame = 2;
 		anim.frameHeight = 48;
 		anim.frameWidth = 48;
 		break;
 	case 5: // Gunner death
-		anim.fps = 6.0f;
+		anim.fps = 2.0f;
 		anim.maxFrames = 8;
 		anim.endFrame = 7;
 		anim.frameHeight = 48;
 		anim.frameWidth = 48;
 		break;
+	case 6: // Bullets
+		anim.fps = 12.0f;
+		anim.maxFrames = 10;
+		anim.endFrame = 9;
+		anim.frameHeight = 32;
+		anim.frameWidth = 32;
+		break;
+	case 7: // Explosion
+		anim.fps = 12.0f;
+		anim.maxFrames = 8;
+		anim.endFrame = 7;
+		anim.frameHeight = 32;
+		anim.frameWidth = 32;
+		break;
+	case 8: // Saw trap
+		anim.fps = 9.0f;
+		anim.maxFrames = 16;
+		anim.endFrame = 15;
+		anim.frameHeight = 64;
+		anim.frameWidth = 64;
+		break;
+	case 9: // Lightning trap
+		anim.fps = 12.0f;
+		anim.maxFrames = 22;
+		anim.endFrame = 21;
+		anim.frameHeight = 96;
+		anim.frameWidth = 96;
+		break;
+	case 10: // Toxic trap
+		anim.fps = 12.0f;
+		anim.maxFrames = 40;
+		anim.endFrame = 39;
+		anim.frameHeight = 64;
+		anim.frameWidth = 96;
+		break;
 	default:
 		break;
 	};
-	return &anim;
 }
