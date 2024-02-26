@@ -5,6 +5,7 @@
 struct SDL_Window;
 struct SDL_Renderer;
 class Texture;
+class Input;
 
 // DEBUG
 class Animation;
@@ -74,6 +75,9 @@ private:
 	SDL_Renderer* m_RendererRef;
 
 	TArray<Texture*> m_TextureStack;
+
+	// Store the input handler for the game
+	Input* m_GameInput;
 
 	// DEBUG TESTING VARIABLES
 	Animation* m_TestAnim1;

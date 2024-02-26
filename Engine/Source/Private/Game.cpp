@@ -3,6 +3,7 @@
 #include "SDL2/SDL.h"
 #include "Debug.h"
 #include "Graphics/Texture.h"
+#include "Input.h"
 
 // DEBUG
 #include "Graphics/Animation.h"
@@ -157,6 +158,9 @@ void Game::Start()
 		Cleanup();
 		return;
 	}
+
+	// Create the game input
+	m_GameInput = new Input();
 	
 	// DEBUG
 	AnimationParams AnimParams;
@@ -221,18 +225,7 @@ void Game::Cleanup()
 
 void Game::ProcessInput()
 {
-	// Data type that reads the SDL input events for the window
-	SDL_Event inputEvent;
-
-	// Run through each input in that frame
-	while (SDL_PollEvent(&inputEvent))
-	{
-		// If cross button is pressed on the window ,close the app
-		if (inputEvent.type == SDL_QUIT)
-		{
-			QuitApp();
-		}
-	}
+	m_GameInput->ProcessInput();
 }
 
 void Game::Update()
@@ -252,15 +245,42 @@ void Game::Update()
 
 	// Position of the animation on the screen
 	static Vector2 position(640.0f, 360.0f); // same as variable = value
+
+	// Speed of movement
 	float speed = 100.0f * (float)deltaTime;
 
+	// Direction to move
+	Vector2 movementDirection = 0.0f;
+
+	if (m_GameInput->IsKeyDown(EE_KEY_W))
+	{
+		movementDirection.y += -1.0f;
+	}
+	if (m_GameInput->IsKeyDown(EE_KEY_S))
+	{
+		movementDirection.y += 1.0f;
+	}
+	if (m_GameInput->IsKeyDown(EE_KEY_A))
+	{
+		movementDirection.x += -1.0f;
+	}
+	if (m_GameInput->IsKeyDown(EE_KEY_D))
+	{
+		movementDirection.x += 1.0f;
+	}
+
 	// Move animation to the right
-	position.x += speed;
+	position += movementDirection * speed;
 
 	if (m_TestAnim1 != nullptr)
 	{
 		m_TestAnim1->SetPosition(position.x, position.y);
 		m_TestAnim1->Update((float)deltaTime);
+	}
+
+	if (m_GameInput->IsMouseButtonDown(EE_MOUSE_LEFT))
+	{
+		m_GameInput->GetMousePos().Log();
 	}
 }
 
