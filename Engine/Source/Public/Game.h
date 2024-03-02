@@ -7,8 +7,10 @@ struct SDL_Renderer;
 class Texture;
 class Input;
 
+
 // DEBUG
 class Animation;
+struct Vector2; // Used for player movePlayerWithMouse function
 
 class Game
 {
@@ -82,6 +84,6 @@ private:
 	// DEBUG TESTING VARIABLES
 	Animation* m_TestAnim1;
 
-	void printHelloWorld();
+	void movePlayerWithMouse(float xPos, float yPos, Vector2 &direction);
 
 };
