@@ -54,5 +54,5 @@ public:
 
 	void SetRotation(float angle);
 
-	void SetScale(float scale);
+	void SetScale(float x, float y);
 };

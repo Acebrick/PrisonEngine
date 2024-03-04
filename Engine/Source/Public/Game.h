@@ -6,7 +6,7 @@ struct SDL_Window;
 struct SDL_Renderer;
 class Texture;
 class Input;
-
+class GameObject;
 
 // DEBUG
 class Animation;
@@ -24,18 +24,22 @@ public:
 	// Run the game
 	void Run() { Initialise(); };
 
-	void QuitApp() { isGameOpen = false; }
+	void QuitApp() { m_IsGameOpen = false; }
 
 	// Import a texture to the game
 	Texture* ImportTexture(const char* pathToFile);
 
 	void DestroyTexture(Texture* textureToDestroy);
 
+	// Add a game object to the game
+	template<typename T>
+	T* AddGameObject();
+
 private:
 	// Functions
 
 // Flag that decides when the game loop ends
-	bool isGameOpen;
+	bool m_IsGameOpen;
 
 	Game();
 	~Game();
@@ -57,6 +61,9 @@ private:
 	void Cleanup();
 
 	// Game loop
+
+	// Checks if any objects ned to be spawned
+	void PreLoop();
 
 	// Listen for user input and process
 	void ProcessInput();
@@ -81,9 +88,19 @@ private:
 	// Store the input handler for the game
 	Input* m_GameInput;
 
+	// Store all game objects that need to be spawned on the next loop
+	TArray<GameObject*> m_GameOjectPendingSpawn;
+
+	// Store all of the game objects in the game
+	TArray<GameObject*> m_GameObjectStack;
+
 	// DEBUG TESTING VARIABLES
 	Animation* m_TestAnim1;
+
+	GameObject* m_TestObject;
 
 	void movePlayerWithMouse(float xPos, float yPos, Vector2 &direction);
 
 };
+
+

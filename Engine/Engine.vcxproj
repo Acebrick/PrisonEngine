@@ -97,6 +97,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Private\Game.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\GameObject.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\PhysicsObject.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\SpriteObject.cpp" />
     <ClCompile Include="Source\Private\Graphics\Animation.cpp" />
     <ClCompile Include="Source\Private\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Private\Input.cpp" />
@@ -107,6 +110,9 @@
     <ClInclude Include="Source\Public\Debug.h" />
     <ClInclude Include="Source\Public\EngineTypes.h" />
     <ClInclude Include="Source\Public\Game.h" />
+    <ClInclude Include="Source\Public\GameObjects\PhysicsObject.h" />
+    <ClInclude Include="Source\Public\GameObjects\GameObject.h" />
+    <ClInclude Include="Source\Public\GameObjects\SpriteObject.h" />
     <ClInclude Include="Source\Public\Graphics\Animation.h" />
     <ClInclude Include="Source\Public\Graphics\Texture.h" />
     <ClInclude Include="Source\Public\Input.h" />
