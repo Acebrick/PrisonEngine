@@ -3,7 +3,7 @@
 
 void GameObject::Start()
 {
-	if (!isPendingDestroy())
+	if (isPendingDestroy())
 	{
 		return;
 	}
@@ -14,7 +14,7 @@ void GameObject::Start()
 
 void GameObject::ProcessInput(Input* gameInput)
 {
-	if (!isPendingDestroy())
+	if (isPendingDestroy())
 	{
 		return;
 	}
@@ -24,7 +24,7 @@ void GameObject::ProcessInput(Input* gameInput)
 
 void GameObject::Update(float deltaTime)
 {
-	if (!isPendingDestroy())
+	if (isPendingDestroy())
 	{
 		return;
 	}
@@ -34,7 +34,7 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::PostUpdate(float deltaTime)
 {
-	if (!isPendingDestroy())
+	if (isPendingDestroy())
 	{
 		return;
 	}

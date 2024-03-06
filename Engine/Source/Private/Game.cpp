@@ -190,8 +190,6 @@ void Game::Start()
 	//m_TestAnim1->SetScale(3.0f);
 	//m_TestAnim1->SetPosition(640, 360);
 
-
-
 	m_TestObject = AddGameObject<PhysicsObject>();
 
 	GameLoop();
