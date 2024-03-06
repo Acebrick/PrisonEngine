@@ -273,6 +273,8 @@ void Game::ProcessInput()
 	// Process the inputs for the game
 	m_GameInput->ProcessInput();
 
+	
+
 	// Run the input listener function for all game objects
 	for (auto GO : m_GameObjectStack)
 	{
@@ -298,34 +300,9 @@ void Game::Update()
 
 	// DEBUG
 
-	// Position of the animation on the screen
-	static Vector2 position(640.0f, 360.0f); // same as variable = value
-
-	// Speed of movement
-	float speed = 1000.0f * (float)deltaTime;
-
-	// Direction to move
-	Vector2 movementDirection = 0.0f;
-
 	//movePlayerWithMouse(position.x, position.y, movementDirection);
 
-	// Move player with WASD
-	//if (m_GameInput->IsKeyDown(EE_KEY_W))
-	//{
-	//	movementDirection.y += -1.0f;
-	//}
-	//if (m_GameInput->IsKeyDown(EE_KEY_S))
-	//{
-	//	movementDirection.y += 1.0f;
-	//}
-	//if (m_GameInput->IsKeyDown(EE_KEY_A))
-	//{
-	//	movementDirection.x += -1.0f;
-	//}
-	//if (m_GameInput->IsKeyDown(EE_KEY_D))
-	//{
-	//	movementDirection.x += 1.0f;
-	//}
+
 
 	//if (m_GameInput->IsKeyDown(EE_KEY_SPACE))
 	//{
@@ -336,14 +313,6 @@ void Game::Update()
 	//	}
 	//}
 
-	//// Move animation to the right
-	//position += movementDirection * speed;
-
-	//if (m_TestAnim1 != nullptr)
-	//{
-	//	m_TestAnim1->SetPosition(position.x, position.y);
-	//	m_TestAnim1->Update((float)deltaTime);
-	//}
 
 	for (auto GO : m_GameObjectStack)
 	{
@@ -397,91 +366,3 @@ void Game::CollectGarbage()
 	}
 }
 
-void Game::movePlayerWithMouse(float xPos, float yPos, Vector2 &direction)
-{
-	// FOLLOW MOUSE VARIABLES
-
-	Vector2 mousePos = m_GameInput->GetMousePos(); // Maintain mouse position
-	static Vector2 triangleSideLength; // Sides of hypothetical right angled triangle to get angles
-
-	// Angle closest to horizontal/x axis
-	static float angleOfX;
-
-	// Angle closest to vertical/y axis
-	static float angleOfY;
-
-	// Percentage out of 100 these angles make up out of 90 degrees
-	static float xAnglePercent = 0;
-	static float yAnglePercent = 0;
-
-	// Get the length of the two sides excluding the hypotenuse
-	triangleSideLength.x = mousePos.x - xPos;
-	triangleSideLength.y = mousePos.y - yPos;
-
-	// Convert any negative lengths to positive to allow for proper angle calculations
-	if (triangleSideLength.x < 0)
-	{
-		triangleSideLength.x = -triangleSideLength.x;
-	}
-	if (triangleSideLength.y < 0)
-	{
-		triangleSideLength.y = -triangleSideLength.y;
-	}
-
-	// Calculate the angle connecting the side parellel to the x axis and the hypotenuse (angle closest to player)
-	angleOfX = atan(triangleSideLength.y / triangleSideLength.x) / (3.14f / 180.0f);
-	angleOfY = (90.0f - angleOfX);
-
-	// Converted to be a percentage out of 100 that these angles make up out of 90 degrees (in decimal format, so 1 = 100%)
-	// Minused by 1 as angle distance is at its lowest when mouse is positioned in desired movement direction
-	// This just reverses the two and makes code easier to read when used as x is now used with x movement and y is used with y movement
-	xAnglePercent = 1 - angleOfX / 90.0f;
-	yAnglePercent = 1 - angleOfY / 90.0f;
-
-	// Move the player in the direction of the mouse
-	if (m_GameInput->IsMouseButtonDown(EE_MOUSE_LEFT))
-	{
-		if (mousePos.x > xPos) // Go right
-		{
-			direction.x += 1.0f * xAnglePercent;
-		}
-		else // Go left
-		{
-			direction.x += -1.0f * xAnglePercent;
-		}
-		if (mousePos.y > yPos) // Go down
-		{
-			direction.y += 1.0f * yAnglePercent;
-		}
-		else // Go up
-		{
-			direction.y += -1.0f * yAnglePercent;
-		}
-	}
-
-	// Rotate the player based on the mouse position
-	if (mousePos.x > xPos && mousePos.y < yPos) // Top right of circle
-	{
-		m_TestAnim1->SetRotation(angleOfY);
-	}
-	if (mousePos.x > xPos && mousePos.y > yPos) // Bottom right of circle
-	{
-		m_TestAnim1->SetRotation(angleOfX + 90);
-	}
-	if (mousePos.x < xPos && mousePos.y > yPos) // Bottom left of circle
-	{
-		m_TestAnim1->SetRotation(angleOfY + 180);
-	}
-	if (mousePos.x < xPos && mousePos.y < yPos) // Top left of circle
-	{
-		m_TestAnim1->SetRotation(angleOfX + 270);
-	}
-
-	// DEBUG VARIABLES
-	//std::cout << "triangleSideLength.x: " << triangleSideLength.x << std::endl;
-	//std::cout << "triangleSideLength.y: " << triangleSideLength.y << std::endl;
-	//std::cout << "angleOfX: " << angleOfX << std::endl;
-	//std::cout << "angleOfY: " << angleOfY << std::endl;
-	//std::cout << "xAnglePercent: " << xAnglePercent << std::endl;
-	//std::cout << "yAnglePercent: " << yAnglePercent << std::endl;
-}

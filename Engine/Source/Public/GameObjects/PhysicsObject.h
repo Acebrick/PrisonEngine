@@ -1,11 +1,14 @@
 #pragma once
 #include "SpriteObject.h"
 
+class Input;
+
 class PhysicsObject : public SpriteObject
 {
 public:
 	PhysicsObject() : m_Sprite(nullptr) {}
 	~PhysicsObject() = default;
+	void movePlayerWithMouse(float xPos, float yPos, Vector2& direction, Input* gameInput);
 
 protected:
 	virtual void OnStart() override;
@@ -16,4 +19,6 @@ protected:
 
 private:
 	Animation* m_Sprite;
+	Vector2 m_MovementDirection;
+	float m_Speed = 0.0f;
 };

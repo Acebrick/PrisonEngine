@@ -99,7 +99,7 @@ private:
 
 	GameObject* m_TestObject;
 
-	void movePlayerWithMouse(float xPos, float yPos, Vector2 &direction);
+	//void movePlayerWithMouse(float xPos, float yPos, Vector2 &direction);
 
 };
 
