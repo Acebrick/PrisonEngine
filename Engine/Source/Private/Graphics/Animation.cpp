@@ -225,11 +225,13 @@ bool Animation::GunnerDead(Animation* character, Animation* explosion)
 		character->AnimTypeDefinitions(5, GunnerDead);
 		character->m_TextureRef->ImportTexture("Content/Sprites/SpaceGunner/CharacterSprites/Black/Gunner_Black_Death.png");
 		explosion->SetPosition(character->m_TextureRef->m_PosX, character->m_TextureRef->m_PosY);
+		explosion->m_CurrentFrame = 0;
+
 		textureImported = true;
 	}
 
 	// Stop animating explosion when last frame is reached
-	if (explosion->m_CurrentFrame == explosion->m_AnimParams->endFrame)
+	if (explosion->m_CurrentFrame >= explosion->m_AnimParams->endFrame)
 	{
 		explosion->SetScale(0.0f);
 	}
