@@ -74,10 +74,10 @@ protected:
 	// Run on the game objects process input (before each update frame)
 	virtual void OnProcessInput(Input* gameInput) {}
 
-	//
+	// Run on the game objects update (each frame)
 	virtual void OnUpdate(float deltaTime) {}
 
-	//
+	// Run on the game objects post update (each frame after the update)
 	virtual void OnPostUpdate(float deltaTime) {}
 
 private:

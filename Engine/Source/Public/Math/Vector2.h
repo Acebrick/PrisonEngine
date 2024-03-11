@@ -89,13 +89,13 @@ struct Vector2 {
 
 	// Get the squared length/magnitude/size of the Vector2, inaccurate by double the size but cheaper
 	// Use this function for comparisons
-	float LengthSqd()
+	float LengthSqd() const
 	{
 		return x * x + y * y;
 	}
 
 	// Get the length/magnitude/size of the vector
-	float Length();
+	float Length() const;
 
 	//Get the distance between two vectors, inaccurate by double the size but cheaper
 	static float DistSqd(Vector2& v1, Vector2& v2)
@@ -108,6 +108,12 @@ struct Vector2 {
 
 	// Get the distance between two Vector2's
 	static float Distance(Vector2 v1, Vector2& v2);
+
+	// Change the vector2 to a normalised value
+	Vector2& Normalise();
+
+	// Return a normalised vector based on another vector
+	static Vector2 Normalised(const Vector2& other);
 
 	// Log x and y of the vector2 to the console
 	void Log();

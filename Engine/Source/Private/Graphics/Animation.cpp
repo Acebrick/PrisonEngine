@@ -35,18 +35,19 @@ bool Animation::CreateAnimation(const char* pathToFile, AnimationParams* params)
 		return false;
 	}
 
-	// Set the parameters
-	m_AnimParams = new AnimationParams();
-	m_AnimParams->endFrame = params->endFrame;
-	m_AnimParams->fps = params->fps;
-	m_AnimParams->frameHeight = params->frameHeight;
-	m_AnimParams->frameWidth = params->frameWidth;
-	m_AnimParams->maxFrames = params->maxFrames;
-	m_AnimParams->startFrame = params->startFrame;
-
 	// If animation parameters were set
-	if (m_AnimParams != nullptr)
+	if (params != nullptr)
 	{
+		// Set the parameters
+		m_AnimParams = new AnimationParams();
+		m_AnimParams->endFrame = params->endFrame;
+		m_AnimParams->fps = params->fps;
+		m_AnimParams->frameHeight = params->frameHeight;
+		m_AnimParams->frameWidth = params->frameWidth;
+		m_AnimParams->maxFrames = params->maxFrames;
+		m_AnimParams->startFrame = params->startFrame;
+
+		// Set the current frame to start frame
 		m_CurrentFrame = m_AnimParams->startFrame;
 
 		// Update the clip to start on the first frame
@@ -62,7 +63,7 @@ bool Animation::CreateAnimation(const char* pathToFile, AnimationParams* params)
 
 void Animation::Update(float deltaTime)
 {
-	if (m_AnimParams == nullptr || m_AnimParams->fps == 0.0f)
+	if (!m_TextureRef->m_IsVisible || m_AnimParams == nullptr || m_AnimParams->fps == 0.0f)
 	{
 		return;
 	}
@@ -122,4 +123,14 @@ void Animation::SetScale(float x, float y)
 
 	m_TextureRef->m_ScaleX = x;
 	m_TextureRef->m_ScaleY = y;
+}
+
+void Animation::SetVisible(bool isVisible)
+{
+	if (m_TextureRef == nullptr)
+	{
+		return;
+	}
+
+	m_TextureRef->m_IsVisible = isVisible;
 }

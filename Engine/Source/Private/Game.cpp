@@ -7,9 +7,8 @@
 #include "GameObjects/GameObject.h"
 
 // DEBUG
-#include "Graphics/Animation.h"
-#include "Math/Vector2.h"
-#include "GameObjects/PhysicsObject.h"
+#include "GameObjects/Player.h"
+#include "GameObjects/Enemy.h"
 
 Game* Game::GetGame()
 {
@@ -121,10 +120,6 @@ Game::Game()
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
 	m_GameInput = nullptr;
-
-	// Debug variables
-	m_TestAnim1 = nullptr;
-	m_TestObject = nullptr;
 }
 
 Game::~Game()
@@ -180,17 +175,8 @@ void Game::Start()
 	
 	// DEBUG
 
-
-
-	// DEBUG
-	//m_TestAnim1 = new Animation();
-
-	//m_TestAnim1->CreateAnimation("",
-	//	&AnimParams);
-	//m_TestAnim1->SetScale(3.0f);
-	//m_TestAnim1->SetPosition(640, 360);
-
-	m_TestObject = AddGameObject<PhysicsObject>();
+	AddGameObject<Player>();
+	AddGameObject<Enemy>();
 
 	GameLoop();
 }
@@ -298,22 +284,7 @@ void Game::Update()
 	// Set the last tick time
 	lastTickTime = currentTickTime;
 
-	// DEBUG
-
-	//movePlayerWithMouse(position.x, position.y, movementDirection);
-
-
-
-	//if (m_GameInput->IsKeyDown(EE_KEY_SPACE))
-	//{
-	//	if (m_TestObject != nullptr)
-	//	{
-	//		m_TestObject->DestroyObject();
-	//		m_TestObject = nullptr;
-	//	}
-	//}
-
-
+	// Run the update logic for all game objects
 	for (auto GO : m_GameObjectStack)
 	{
 		if (GO != nullptr)
@@ -322,6 +293,17 @@ void Game::Update()
 			GO->PostUpdate((float)deltaTime);
 		}
 	}
+
+	// Caps the frame rate (1000 represents milliseconds)
+	int frameDuration = 1000 / 240;
+
+	if ((double)frameDuration > longDelta)
+	{
+		frameDuration = (int)longDelta;
+	}
+
+	// If the frame rate is greater than 240 delay the frame
+	SDL_Delay((Uint32)frameDuration);
 }
 
 void Game::Render()
@@ -365,4 +347,3 @@ void Game::CollectGarbage()
 		m_GameObjectStack.erase(m_GameObjectStack.begin() + i);
 	}
 }
-

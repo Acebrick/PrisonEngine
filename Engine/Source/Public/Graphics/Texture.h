@@ -15,6 +15,9 @@ public:
 	// Rotation of the image
 	float m_Angle;
 
+	// Determine whether or not to render the texture
+	bool m_IsVisible;
+
 	// Functions
 	Texture(SDL_Renderer* renderer);
 	~Texture();

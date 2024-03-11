@@ -8,10 +8,6 @@ class Texture;
 class Input;
 class GameObject;
 
-// DEBUG
-class Animation;
-struct Vector2; // Used for player movePlayerWithMouse function
-
 class Game
 {
 public:
@@ -93,14 +89,6 @@ private:
 
 	// Store all of the game objects in the game
 	TArray<GameObject*> m_GameObjectStack;
-
-	// DEBUG TESTING VARIABLES
-	Animation* m_TestAnim1;
-
-	GameObject* m_TestObject;
-
-	//void movePlayerWithMouse(float xPos, float yPos, Vector2 &direction);
-
 };
 
 

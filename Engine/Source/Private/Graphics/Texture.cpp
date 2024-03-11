@@ -13,6 +13,7 @@ Texture::Texture(SDL_Renderer* renderer)
 	m_TextureRef = nullptr;
 	m_ScaleX = m_ScaleY = 1.0f;
 	m_ClipRect = nullptr;
+	m_IsVisible = true;
 }
 
 Texture::~Texture()
@@ -65,6 +66,11 @@ void Texture::CopyTexture(Texture* copyTexture)
 
 void Texture::Draw()
 {
+	if (!m_IsVisible)
+	{
+		return;
+	}
+
 	float imageWidth = (float)m_SurfaceData->w;
 	float imageHeight = (float)m_SurfaceData->h;
 
