@@ -21,6 +21,8 @@ protected:
 	// The direction to move the character in
 	Vector2 m_MoveDirection;
 
+	void bounceOffWall();
+
 private:
 
 };

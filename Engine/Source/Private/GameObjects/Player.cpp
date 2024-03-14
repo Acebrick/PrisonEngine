@@ -8,7 +8,7 @@
 
 Player::Player()
 {
-	m_MaxSpeed = 600.0f;
+	m_MaxSpeed = 300.0f;
 	m_Deceleration = 5.0f;
 	m_AccelerationSpeed = 5000.0f;
 
@@ -62,20 +62,23 @@ void Player::OnProcessInput(Input* gameInput)
 	if (gameInput->IsKeyDown(EE_KEY_W))
 	{
 		AddMovementInput(Vector2(0.0f, -1.0f));
+		SetRotation(0);
 	}
 	if (gameInput->IsKeyDown(EE_KEY_S))
 	{
 		AddMovementInput(Vector2(0.0f, 1.0f));
+		SetRotation(180);
 	}
 	if (gameInput->IsKeyDown(EE_KEY_A))
 	{
 		AddMovementInput(Vector2(-1.0f, 0.0f));
+		SetRotation(270);
 	}
 	if (gameInput->IsKeyDown(EE_KEY_D))
 	{
 		AddMovementInput(Vector2(1.0f, 0.0f));
+		SetRotation(90);
 	}
-
 }
 
 void Player::OnUpdate(float deltaTime)
@@ -90,6 +93,8 @@ void Player::OnUpdate(float deltaTime)
 	{
 		SetPoweredEngine(false);
 	}
+
+	bounceOffWall();
 }
 
 void Player::SetPoweredEngine(bool powered)

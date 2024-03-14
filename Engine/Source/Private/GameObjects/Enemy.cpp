@@ -39,3 +39,5 @@ void Enemy::OnUpdate(float deltaTime)
 		SetPosition({ 640.0f, -HALF_SIZE });
 	}
 }
+
+
