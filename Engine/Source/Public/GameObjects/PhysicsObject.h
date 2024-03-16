@@ -11,9 +11,6 @@ public:
 	// Add force to the object
 	void AddForce(Vector2 direction, float force);
 
-	// Function not done in lecture
-	void movePlayerWithMouse(float xPos, float yPos, Vector2& direction, Input* gameInput);
-
 protected:
 	virtual void OnPostUpdate(float deltaTime) override;
 

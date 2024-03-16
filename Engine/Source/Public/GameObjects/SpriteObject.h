@@ -52,4 +52,6 @@ private:
 	TArray<Sprite*> m_SpriteStack;
 
 	void SpriteFollowObject(Sprite* spriteToFollow);
+
+	
 };

@@ -13,8 +13,13 @@ protected:
 
 	virtual void OnUpdate(float deltaTime) override;
 
+	void ActivateBoost(bool boosting);
+
 	// Store the different effects for the engine effects
 	TArray<Sprite*> m_EngineEffects;
+
+	// Store the ship damage levels
+	TArray<Sprite*> m_ShipHealth;
 
 private:
 

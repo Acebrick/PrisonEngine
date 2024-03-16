@@ -8,14 +8,18 @@
 
 #define Super Character
 
-#define ENGINE_IDLE 0
-#define ENGINE_POWERED 1
-#define PLAYER_WIDTH 64
+#define ENGINE_NORMAL 0
+#define ENGINE_BOOST 1
+#define SIZE_PLAYER 64
+
+#define DAMAGE_NONE 0
+#define DAMAGE_LOW 1
+#define DAMAGE_MED 2
+#define DAMAGE_HIGH 3
 
 
 Player::Player()
 {
-	m_IsPlayer = true;
 	m_MaxSpeed = 500.0f;
 	m_Deceleration = 2.5f;
 	m_AccelerationSpeed = 5000.0f;
@@ -24,13 +28,24 @@ Player::Player()
 	shipAnimParams.fps = 24.0f;
 	shipAnimParams.maxFrames = 10;
 	shipAnimParams.endFrame = 9;
-	shipAnimParams.frameHeight = 64.0f;
-	shipAnimParams.frameWidth = 64.0f;
+	shipAnimParams.frameHeight = SIZE_PLAYER;
+	shipAnimParams.frameWidth = SIZE_PLAYER;
 
-	// Add the ship base sprite
-	m_MainSprite = AddSprite(
-		"Content/Sprites/MainShip/Shields/PNGs/Main Ship - Shields - Invincibility Shield.png",
-		&shipAnimParams);
+	// Add the full health ship sprite
+	m_ShipHealth.push_back(AddSprite(
+		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Full health.png"));
+
+	// Add the low damaged ship sprite
+	m_ShipHealth.push_back(AddSprite(
+		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Slight damage.png"));
+
+	// Add the medium damaged ship sprite
+	m_ShipHealth.push_back(AddSprite(
+		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Damaged.png"));
+
+	// Add the high damaged ship sprite
+	m_ShipHealth.push_back(AddSprite(
+		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Very damaged.png"));
 
 	AnimationParams animParams;
 	animParams.fps = 24.0f;
@@ -51,10 +66,19 @@ Player::Player()
 		&animParams
 	));
 
-	// Hide the sprite by default
-	if (m_EngineEffects.size() > 1 && m_EngineEffects[ENGINE_POWERED] != nullptr)
+	// Hide the engine effect sprites by default
+	if (m_EngineEffects.size() > 1 && m_EngineEffects[ENGINE_BOOST] != nullptr)
 	{
-		m_EngineEffects[ENGINE_POWERED]->SetActive(false);
+		m_EngineEffects[ENGINE_BOOST]->SetActive(false);
+	}
+
+	// Hide the ship sprites by default
+	for (int i = 1; i < m_ShipHealth.size(); i++)
+	{
+		if (m_ShipHealth[i] != nullptr)
+		{
+			m_ShipHealth[i]->SetActive(false);
+		}
 	}
 }
 
@@ -92,17 +116,14 @@ void Player::OnProcessInput(Input* gameInput)
 		SetRotation(90);
 	}
 
-	// Boost
+	// Use boost
 	if (gameInput->IsKeyDown(EE_KEY_LSHIFT))
 	{
-		m_MaxSpeed = 1000.0f;
-		m_EngineEffects[ENGINE_IDLE]->SetActive(false);
-		m_EngineEffects[ENGINE_POWERED]->SetActive(true);
+		ActivateBoost(true);
 	}
 	else
 	{
-		m_MaxSpeed = 500.0f;
-		m_EngineEffects[ENGINE_POWERED]->SetActive(false);
+		ActivateBoost(false);
 	}
 }
 
@@ -110,14 +131,33 @@ void Player::OnUpdate(float deltaTime)
 {
 	Super::OnUpdate(deltaTime);
 
+	BounceOffWall(m_MoveDirection, SIZE_PLAYER);
+}
+
+void Player::ActivateBoost(bool boosting)
+{
+	// Turn on normal engines when moving
 	if (m_MoveDirection.Length() > 0.0f)
 	{
-		m_EngineEffects[ENGINE_IDLE]->SetActive(true);
+		m_EngineEffects[ENGINE_NORMAL]->SetActive(true);
 	}
+	// Deactivate engines when not moving
 	else
 	{
-		m_EngineEffects[ENGINE_IDLE]->SetActive(false);
+		m_EngineEffects[ENGINE_NORMAL]->SetActive(false);
 	}
 
-	bounceOffWall(m_MoveDirection, PLAYER_WIDTH);
+	// Turn on booster engines when boosting and increase speed
+	if (boosting)
+	{
+		m_MaxSpeed = 1000.0f;
+		m_EngineEffects[ENGINE_NORMAL]->SetActive(false);
+		m_EngineEffects[ENGINE_BOOST]->SetActive(true);
+	}
+	// Turn off booster engines when boosting and decrease speed
+	else
+	{
+		m_MaxSpeed = 500.0f;
+		m_EngineEffects[ENGINE_BOOST]->SetActive(false);
+	}
 }

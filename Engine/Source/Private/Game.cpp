@@ -102,6 +102,25 @@ void Game::DestroyTexture(Texture* textureToDestroy)
 	EE_LOG("Game", "Texture has been destroyed");
 }
 
+void Game::GetPlayerObject(Vector2& posOfPlayer)
+{
+	// Only works because I know the player is the first to be added to the stack, bad way to do it otherwise for obvious reasons
+	if (m_GameObjectStack[0] != nullptr)
+	{
+		posOfPlayer = m_GameObjectStack[0]->GetTransform().position;
+	}
+}
+
+GameObject* Game::GetPlayer()
+{
+	if (m_GameObjectStack[0] != nullptr)
+	{
+		GameObject* player = m_GameObjectStack[0];
+		return player;
+	}
+	return nullptr;
+}
+
 template<typename T>
 T* Game::AddGameObject()
 {
@@ -122,6 +141,7 @@ Game::Game()
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
 	m_GameInput = nullptr;
+	m_SpaceBackground = nullptr;
 }
 
 Game::~Game()
@@ -176,11 +196,12 @@ void Game::Start()
 	m_GameInput = new Input();
 	
 	// DEBUG
-
 	AddGameObject<Player>();
 	AddGameObject<Enemy>(); 
 	AddGameObject<Enemy>(); 
+	AddGameObject<Enemy>();
 	AddGameObject<Bullet>();
+	
 
 	GameLoop();
 }
@@ -262,8 +283,6 @@ void Game::ProcessInput()
 {
 	// Process the inputs for the game
 	m_GameInput->ProcessInput();
-
-	
 
 	// Run the input listener function for all game objects
 	for (auto GO : m_GameObjectStack)

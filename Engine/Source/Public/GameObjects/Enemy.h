@@ -11,10 +11,9 @@ protected:
 
 	virtual void OnUpdate(float deltaTime) override;
 
-	void FollowPlayer(float xPos, float yPos, Vector2& playerPosition);
-
-	TArray<Sprite*> m_EnemySprite;
-
 private:
+	// Direction the enemy is moving
 	Vector2 direction;
+
+	bool m_FollowingPlayer = false;
 };

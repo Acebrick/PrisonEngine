@@ -7,6 +7,7 @@ struct SDL_Renderer;
 class Texture;
 class Input;
 class GameObject;
+class Player;
 
 struct Vector2;
 
@@ -33,10 +34,10 @@ public:
 	template<typename T>
 	T* AddGameObject();
 
-	TArray<GameObject*> GetGameObject()
-	{
-		return m_GameObjectStack;
-	}
+	// Get the player object to get its position
+	void GetPlayerObject(Vector2& posOfPlayer);
+
+	GameObject* GetPlayer();
 
 private:
 	// Functions
@@ -96,6 +97,8 @@ private:
 
 	// Store all of the game objects in the game
 	TArray<GameObject*> m_GameObjectStack;
+
+	Texture* m_SpaceBackground;
 };
 
 
