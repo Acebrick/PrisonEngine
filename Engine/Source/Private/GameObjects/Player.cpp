@@ -1,25 +1,36 @@
 #include "GameObjects/Player.h"
 #include "Input.h"
+#include "Debug.h"
+#include "GameObjects/Bullet.h"
+
+// TEST
+#include "Game.h"
 
 #define Super Character
 
 #define ENGINE_IDLE 0
 #define ENGINE_POWERED 1
+#define PLAYER_WIDTH 64
+
 
 Player::Player()
 {
-	m_MaxSpeed = 300.0f;
-	m_Deceleration = 5.0f;
+	m_IsPlayer = true;
+	m_MaxSpeed = 500.0f;
+	m_Deceleration = 2.5f;
 	m_AccelerationSpeed = 5000.0f;
 
-	// Add engine sprite
-	AddSprite(
-		"Content/Sprites/MainShip/Engines/PNGs/Main Ship - Engines - Supercharged Engine.png"
-	);
+	AnimationParams shipAnimParams;
+	shipAnimParams.fps = 24.0f;
+	shipAnimParams.maxFrames = 10;
+	shipAnimParams.endFrame = 9;
+	shipAnimParams.frameHeight = 64.0f;
+	shipAnimParams.frameWidth = 64.0f;
 
 	// Add the ship base sprite
 	m_MainSprite = AddSprite(
-		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Full health.png");
+		"Content/Sprites/MainShip/Shields/PNGs/Main Ship - Shields - Invincibility Shield.png",
+		&shipAnimParams);
 
 	AnimationParams animParams;
 	animParams.fps = 24.0f;
@@ -52,13 +63,14 @@ void Player::OnStart()
 	Super::OnStart();
 
 	SetPosition({ 640.0f, 360.0f });
-	SetScale(3.0f);
+	SetScale(2.0f);
 }
 
 void Player::OnProcessInput(Input* gameInput)
 {
 	Super::OnProcessInput(gameInput);
 	
+	// Move the player
 	if (gameInput->IsKeyDown(EE_KEY_W))
 	{
 		AddMovementInput(Vector2(0.0f, -1.0f));
@@ -79,6 +91,19 @@ void Player::OnProcessInput(Input* gameInput)
 		AddMovementInput(Vector2(1.0f, 0.0f));
 		SetRotation(90);
 	}
+
+	// Boost
+	if (gameInput->IsKeyDown(EE_KEY_LSHIFT))
+	{
+		m_MaxSpeed = 1000.0f;
+		m_EngineEffects[ENGINE_IDLE]->SetActive(false);
+		m_EngineEffects[ENGINE_POWERED]->SetActive(true);
+	}
+	else
+	{
+		m_MaxSpeed = 500.0f;
+		m_EngineEffects[ENGINE_POWERED]->SetActive(false);
+	}
 }
 
 void Player::OnUpdate(float deltaTime)
@@ -87,24 +112,12 @@ void Player::OnUpdate(float deltaTime)
 
 	if (m_MoveDirection.Length() > 0.0f)
 	{
-		SetPoweredEngine(true);		
+		m_EngineEffects[ENGINE_IDLE]->SetActive(true);
 	}
 	else
 	{
-		SetPoweredEngine(false);
+		m_EngineEffects[ENGINE_IDLE]->SetActive(false);
 	}
 
-	bounceOffWall();
-}
-
-void Player::SetPoweredEngine(bool powered)
-{
-	if (m_EngineEffects.size() > 1)
-	{
-		if (m_EngineEffects[ENGINE_IDLE] != nullptr || m_EngineEffects[ENGINE_POWERED] != nullptr)
-		{
-			m_EngineEffects[ENGINE_IDLE]->SetActive(!powered);
-			m_EngineEffects[ENGINE_POWERED]->SetActive(powered);
-		}
-	}
+	bounceOffWall(m_MoveDirection, PLAYER_WIDTH);
 }

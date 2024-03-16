@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Private\Game.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Character.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Enemy.cpp" />
     <ClCompile Include="Source\Private\GameObjects\GameObject.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Source\Public\Debug.h" />
     <ClInclude Include="Source\Public\EngineTypes.h" />
     <ClInclude Include="Source\Public\Game.h" />
+    <ClInclude Include="Source\Public\GameObjects\Bullet.h" />
     <ClInclude Include="Source\Public\GameObjects\Character.h" />
     <ClInclude Include="Source\Public\GameObjects\Enemy.h" />
     <ClInclude Include="Source\Public\GameObjects\PhysicsObject.h" />

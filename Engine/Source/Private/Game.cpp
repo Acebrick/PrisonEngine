@@ -5,10 +5,12 @@
 #include "Graphics/Texture.h"
 #include "Input.h"
 #include "GameObjects/GameObject.h"
+#include "Math/Vector2.h"
 
 // DEBUG
 #include "GameObjects/Player.h"
 #include "GameObjects/Enemy.h"
+#include "GameObjects/Bullet.h"
 
 Game* Game::GetGame()
 {
@@ -176,7 +178,9 @@ void Game::Start()
 	// DEBUG
 
 	AddGameObject<Player>();
-	AddGameObject<Enemy>();
+	AddGameObject<Enemy>(); 
+	AddGameObject<Enemy>(); 
+	AddGameObject<Bullet>();
 
 	GameLoop();
 }

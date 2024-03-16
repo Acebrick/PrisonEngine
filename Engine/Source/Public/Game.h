@@ -8,6 +8,8 @@ class Texture;
 class Input;
 class GameObject;
 
+struct Vector2;
+
 class Game
 {
 public:
@@ -30,6 +32,11 @@ public:
 	// Add a game object to the game
 	template<typename T>
 	T* AddGameObject();
+
+	TArray<GameObject*> GetGameObject()
+	{
+		return m_GameObjectStack;
+	}
 
 private:
 	// Functions

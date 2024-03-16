@@ -1,20 +1,18 @@
 #pragma once
-#include "GameObjects/Character.h"
+#include "Character.h"
 
-class Player : public Character
+class Bullet : public Character
 {
 public:
-	Player();
+	Bullet();
 
-protected:
 	virtual void OnStart() override;
 
 	virtual void OnProcessInput(Input* gameInput) override;
 
 	virtual void OnUpdate(float deltaTime) override;
 
-	// Store the different effects for the engine effects
-	TArray<Sprite*> m_EngineEffects;
+	void ShootBullet(Vector2 playerPos);
 
 private:
 

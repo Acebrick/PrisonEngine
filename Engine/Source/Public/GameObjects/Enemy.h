@@ -11,7 +11,10 @@ protected:
 
 	virtual void OnUpdate(float deltaTime) override;
 
-private:
-	
+	void FollowPlayer(float xPos, float yPos, Vector2& playerPosition);
 
+	TArray<Sprite*> m_EnemySprite;
+
+private:
+	Vector2 direction;
 };

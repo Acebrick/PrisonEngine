@@ -1,5 +1,6 @@
 #pragma once
 #include "PhysicsObject.h"
+class Player;
 
 class Character : public PhysicsObject
 {
@@ -18,10 +19,10 @@ protected:
 
 	virtual void OnPostUpdate(float deltaTime) override;
 
+	void bounceOffWall(Vector2& moveDirection, int spriteSize);
+
 	// The direction to move the character in
 	Vector2 m_MoveDirection;
-
-	void bounceOffWall();
 
 private:
 

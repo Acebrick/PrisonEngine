@@ -26,6 +26,9 @@ class GameObject
 {
 public:
 	GameObject() : m_ShouldDestroy(false) {}
+
+	bool m_IsPlayer = false;
+
 	virtual ~GameObject() = default;
 
 	// Runs when this object spawns into the game
