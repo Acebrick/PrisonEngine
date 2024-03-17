@@ -12,8 +12,7 @@
 #define ENGINE_BOOST 1
 #define SIZE_PLAYER 64
 
-#define SHIP_NORMAL 0
-#define SHIP_BOOSTING 1
+#define SHIP_BOOSTING 2
 
 Player::Player()
 {
@@ -28,7 +27,10 @@ Player::Player()
 	shipAnim.frameHeight = SIZE_PLAYER;
 	shipAnim.frameWidth = SIZE_PLAYER;
 
-	// Add the high damaged ship sprite
+	 //Add the high damaged ship sprite
+	m_ShipTypes.push_back(AddSprite(
+		"Content/Sprites/MainShip/Engines/PNGs/Main Ship - Engines - Supercharged Engine.png"));
+
 	m_ShipTypes.push_back(AddSprite(
 		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Full health.png"));
 
@@ -63,11 +65,10 @@ Player::Player()
 		m_EngineEffects[ENGINE_BOOST]->SetActive(false);
 	}
 
-	if (m_ShipTypes.size() > 1 && m_EngineEffects[SHIP_BOOSTING] != nullptr)
+	if (m_ShipTypes[SHIP_BOOSTING] != nullptr)
 	{
 		m_ShipTypes[SHIP_BOOSTING]->SetActive(false);
 	}
-
 }
 
 void Player::OnStart()

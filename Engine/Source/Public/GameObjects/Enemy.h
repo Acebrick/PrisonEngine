@@ -16,4 +16,8 @@ private:
 	Vector2 direction;
 
 	bool m_FollowingPlayer = false;
+
+	TArray<Sprite*> m_EnemyWeapons;
+
+	TArray<Sprite*> m_ShipTypes;
 };

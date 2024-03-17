@@ -5,35 +5,71 @@
 #define Super Character
 #define SIZE_ENEMY 32
 
+#define DAMAGE_SLIGHT 0
+#define DAMAGE_VERY 1
+
+#define WEAPON_ZAPPER 0
+#define WEAPON_ROCKETS 1	
+
 Enemy::Enemy()
 {
 	m_MaxSpeed = 500.0f;
 	m_AccelerationSpeed = 5000.0f;
 
-	AnimationParams bulletParams;
-	bulletParams.fps = 12.0f;
-	bulletParams.maxFrames = 10;
-	bulletParams.endFrame = 9;
-	bulletParams.frameHeight = SIZE_ENEMY;
-	bulletParams.frameWidth = SIZE_ENEMY;
+	AnimationParams zapperAnim;
+	zapperAnim.fps = 20.0f;
+	zapperAnim.maxFrames = 14;
+	zapperAnim.endFrame = 13;
+	zapperAnim.frameHeight = 48.0f;
+	zapperAnim.frameWidth = 48.0f;
 
-	m_MainSprite = AddSprite(
+	AnimationParams rocketAnim;
+	rocketAnim.fps = 20.0f;
+	rocketAnim.maxFrames = 16;
+	rocketAnim.endFrame = 15;
+	rocketAnim.frameHeight = 48.0f;
+	rocketAnim.frameWidth = 48.0f;
+
+	// Enemy weapon sprites
+	m_EnemyWeapons.push_back(AddSprite(
+		"Content/Sprites/MainShip/Weapons/PNGs/Main Ship - Weapons - Zapper.png",
+		&zapperAnim
+	));
+
+	m_EnemyWeapons.push_back(AddSprite(
+		"Content/Sprites/MainShip/Weapons/PNGs/Main Ship - Weapons - Rockets.png",
+		&rocketAnim
+	));
+
+	// Enemy ship sprites
+	m_ShipTypes.push_back(AddSprite(
+		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Slight damage.png"
+	));
+
+	m_ShipTypes.push_back(AddSprite(
 		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Very damaged.png"
-	);
+	));
+
+	// Hide initially and only turn on to selected ships
+	if (m_EnemyWeapons[WEAPON_ZAPPER] != nullptr)
+	{
+		m_EnemyWeapons[WEAPON_ZAPPER]->SetActive(false);
+	}
+	if (m_ShipTypes[DAMAGE_VERY] != nullptr)
+	{
+		m_ShipTypes[DAMAGE_VERY]->SetActive(false);
+	}
 }
 
 void Enemy::OnStart()
 {
 	Super::OnStart();
 
-	static float positionX = 300.0f;
+	static float positionX = 220.0f;
 	positionX += 300.0f;
 
 	// Start the enemy above the screen
-	SetPosition({ positionX, 360.0f });
-
-	// Flip it to look down
-	SetRotation(180.0f);
+	SetPosition({ positionX, 100.0f });
 
 	SetScale(2.0f);
 
@@ -48,7 +84,11 @@ void Enemy::OnStart()
 	if (startDirection.x == 2.0f)
 	{
 		m_FollowingPlayer = true;
-		m_MaxSpeed = 350.0f;
+		m_MaxSpeed = 450.0f;
+		m_EnemyWeapons[WEAPON_ROCKETS]->SetActive(false);
+		m_EnemyWeapons[WEAPON_ZAPPER]->SetActive(true);
+		m_ShipTypes[DAMAGE_SLIGHT]->SetActive(false);
+		m_ShipTypes[DAMAGE_VERY]->SetActive(true);
 	}
 }
 
