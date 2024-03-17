@@ -48,6 +48,7 @@ void Enemy::OnStart()
 	if (startDirection.x == 2.0f)
 	{
 		m_FollowingPlayer = true;
+		m_MaxSpeed = 350.0f;
 	}
 }
 

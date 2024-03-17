@@ -12,11 +12,8 @@
 #define ENGINE_BOOST 1
 #define SIZE_PLAYER 64
 
-#define DAMAGE_NONE 0
-#define DAMAGE_LOW 1
-#define DAMAGE_MED 2
-#define DAMAGE_HIGH 3
-
+#define SHIP_NORMAL 0
+#define SHIP_BOOSTING 1
 
 Player::Player()
 {
@@ -24,47 +21,41 @@ Player::Player()
 	m_Deceleration = 2.5f;
 	m_AccelerationSpeed = 5000.0f;
 
-	AnimationParams shipAnimParams;
-	shipAnimParams.fps = 24.0f;
-	shipAnimParams.maxFrames = 10;
-	shipAnimParams.endFrame = 9;
-	shipAnimParams.frameHeight = SIZE_PLAYER;
-	shipAnimParams.frameWidth = SIZE_PLAYER;
-
-	// Add the full health ship sprite
-	m_ShipHealth.push_back(AddSprite(
-		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Full health.png"));
-
-	// Add the low damaged ship sprite
-	m_ShipHealth.push_back(AddSprite(
-		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Slight damage.png"));
-
-	// Add the medium damaged ship sprite
-	m_ShipHealth.push_back(AddSprite(
-		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Damaged.png"));
+	AnimationParams shipAnim;
+	shipAnim.fps = 24.0f;
+	shipAnim.maxFrames = 10;
+	shipAnim.endFrame = 9;
+	shipAnim.frameHeight = SIZE_PLAYER;
+	shipAnim.frameWidth = SIZE_PLAYER;
 
 	// Add the high damaged ship sprite
-	m_ShipHealth.push_back(AddSprite(
-		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Very damaged.png"));
+	m_ShipTypes.push_back(AddSprite(
+		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Full health.png"));
 
-	AnimationParams animParams;
-	animParams.fps = 24.0f;
-	animParams.maxFrames = 4;
-	animParams.endFrame = 3;
-	animParams.frameHeight = 48.0f;
-	animParams.frameWidth = 48.0f;	
+	m_ShipTypes.push_back(AddSprite(
+		"Content/Sprites/MainShip/Shields/PNGs/Main Ship - Shields - Invincibility Shield.png",
+		&shipAnim));
+
+	AnimationParams engineAnim;
+	engineAnim.fps = 24.0f;
+	engineAnim.maxFrames = 4;
+	engineAnim.endFrame = 3;
+	engineAnim.frameHeight = 48.0f;
+	engineAnim.frameWidth = 48.0f;	
 
 	// Add the idle engine effect
 	m_EngineEffects.push_back(AddSprite(
 		"Content/Sprites/MainShip/Engine Effects/PNGs/Main Ship - Engines - Supercharged Engine - Idle.png",
-		&animParams
+		&engineAnim
 	));
 
 	// Add the powered engine effect
 	m_EngineEffects.push_back(AddSprite(
 		"Content/Sprites/MainShip/Engine Effects/PNGs/Main Ship - Engines - Supercharged Engine - Powering.png",
-		&animParams
+		&engineAnim
 	));
+
+	
 
 	// Hide the engine effect sprites by default
 	if (m_EngineEffects.size() > 1 && m_EngineEffects[ENGINE_BOOST] != nullptr)
@@ -72,14 +63,11 @@ Player::Player()
 		m_EngineEffects[ENGINE_BOOST]->SetActive(false);
 	}
 
-	// Hide the ship sprites by default
-	for (int i = 1; i < m_ShipHealth.size(); i++)
+	if (m_ShipTypes.size() > 1 && m_EngineEffects[SHIP_BOOSTING] != nullptr)
 	{
-		if (m_ShipHealth[i] != nullptr)
-		{
-			m_ShipHealth[i]->SetActive(false);
-		}
+		m_ShipTypes[SHIP_BOOSTING]->SetActive(false);
 	}
+
 }
 
 void Player::OnStart()
@@ -153,11 +141,13 @@ void Player::ActivateBoost(bool boosting)
 		m_MaxSpeed = 1000.0f;
 		m_EngineEffects[ENGINE_NORMAL]->SetActive(false);
 		m_EngineEffects[ENGINE_BOOST]->SetActive(true);
+		m_ShipTypes[SHIP_BOOSTING]->SetActive(true);
 	}
 	// Turn off booster engines when boosting and decrease speed
 	else
 	{
 		m_MaxSpeed = 500.0f;
 		m_EngineEffects[ENGINE_BOOST]->SetActive(false);
+		m_ShipTypes[SHIP_BOOSTING]->SetActive(false);
 	}
 }

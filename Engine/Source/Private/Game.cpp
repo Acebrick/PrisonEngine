@@ -115,10 +115,10 @@ GameObject* Game::GetPlayer()
 {
 	if (m_GameObjectStack[0] != nullptr)
 	{
-		GameObject* player = m_GameObjectStack[0];
-		return player;
+		//GameObject* player = m_GameObjectStack[0];
+		return m_GameObjectStack[0];
 	}
-	return nullptr;
+	//return nullptr;
 }
 
 template<typename T>
@@ -332,7 +332,7 @@ void Game::Update()
 void Game::Render()
 {
 	// Tell renderer what colour to use next
-	SDL_SetRenderDrawColor(m_RendererRef, 150, 150, 150, 255);
+	SDL_SetRenderDrawColor(m_RendererRef, 15, 15, 15, 255);
 
 	// Use the colour just stated to clear the previous frame and fill in with that colour
 	SDL_RenderClear(m_RendererRef);

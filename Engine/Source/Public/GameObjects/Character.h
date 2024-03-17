@@ -25,6 +25,7 @@ protected:
 	// The direction to move the character in
 	Vector2 m_MoveDirection;
 
+	// Pointer to the player in game object stack
 	GameObject* m_Player;
 
 private:
