@@ -3,6 +3,7 @@
 #include "EngineTypes.h"
 
 class Input;
+class Bounds;
 
 struct EETransform 
 {
@@ -47,7 +48,7 @@ public:
 	bool isPendingDestroy() const { return m_ShouldDestroy; }
 
 	// Remove any memory references
-	virtual void Cleanup() {}
+	virtual void Cleanup();
 
 	// Get the transform of the object
 	EETransform GetTransform() const { return m_Transform; }
@@ -63,6 +64,12 @@ public:
 
 	// Set the scale of the object
 	void SetScale(Vector2 scale);
+
+	// Test which bounds event needs to run
+	void TestOverlapEvent(Bounds* otherBounds);
+
+	// Return all bounds on the object
+	TArray<Bounds*> GetAllBounds() const { return m_BoundsStack; }
 
 protected:
 	// Run when the game object has been marked for destroy
@@ -80,10 +87,29 @@ protected:
 	// Run on the game objects post update (each frame after the update)
 	virtual void OnPostUpdate(float deltaTime) {}
 
+	// This will run when a bounds enters another bounds
+	// @param1 - other bounds that overlapped
+	// @param2 the game objects bounds that was overlaped
+	virtual void OnOverlapEnter(Bounds* overlapBounds, Bounds* hitBounds) {}
+
+	// This will run when a bounds exits another bounds
+	// @param1 - other bounds that overlapped
+	// @param2 the game objects bounds that was overlaped
+	virtual void OnOverlapExit(Bounds* overlapBounds, Bounds* hitBounds) {}
+
+	// Add a bounds to the object (center is relative to the object)
+	Bounds* AddBounds(Vector2 center = 0.0f, Vector2 extent = 1.0f);
+
 private:
 	// Determine if the object should be destroyed at the end of the loop
 	bool m_ShouldDestroy;
 
 	// Store the transform location for the object
 	EETransform m_Transform;
+
+	// Store all of the bounds on the object
+	TArray<Bounds*> m_BoundsStack;
+
+	// Set all the bounds to match the object position
+	void BoundsMatchObjectPosition();
 };

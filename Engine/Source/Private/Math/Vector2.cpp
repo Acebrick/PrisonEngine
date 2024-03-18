@@ -4,7 +4,7 @@
 
 #define MINNORMAL 0.00001f
 
-Vector2 Vector2::operator/(const Vector2& other)
+Vector2 Vector2::operator/(const Vector2& other) const
 {
 	Vector2 newVector(NaN());
 
@@ -31,7 +31,7 @@ Vector2& Vector2::operator/=(const Vector2& other)
 {
 	return *this = *this / other;
 }
-Vector2 Vector2::operator/(const float& scalar)
+Vector2 Vector2::operator/(const float& scalar) const
 {
 	if (scalar == 0)
 	{

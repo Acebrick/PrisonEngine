@@ -1,10 +1,13 @@
 #include "GameObjects/Player.h"
 #include "Input.h"
+#include "GameObjects/Enemy.h"
 
 #define Super Character
 
 #define ENGINE_IDLE 0
 #define ENGINE_POWERED 1
+#define SCALE 3.0f
+#define SCALE_BOUNDS (SCALE * 0.65f)
 
 Player::Player()
 {
@@ -45,6 +48,9 @@ Player::Player()
 	{
 		m_EngineEffects[ENGINE_POWERED]->SetActive(false);
 	}
+
+	Bounds* playerBounds = AddBounds( {640.0f, 360.0f }, 48.0f * SCALE_BOUNDS);
+	playerBounds->m_OriginOffset = -24.0f * SCALE_BOUNDS;
 }
 
 void Player::OnStart()
@@ -52,7 +58,7 @@ void Player::OnStart()
 	Super::OnStart();
 
 	SetPosition({ 640.0f, 360.0f });
-	SetScale(3.0f);
+	SetScale(SCALE);
 }
 
 void Player::OnProcessInput(Input* gameInput)
@@ -91,6 +97,23 @@ void Player::OnUpdate(float deltaTime)
 		SetPoweredEngine(false);
 	}
 }
+
+void Player::OnOverlapEnter(Bounds* overlapBounds, Bounds* hitBounds)
+{
+	// Destroy by tag
+	//if (overlapBounds->m_Tag == "ENEMY")
+	//{
+	//	
+	//}
+
+	// Destroy by object type detection
+	//if (dynamic_cast<Enemy*>(overlapBounds->GetOwner()))
+	//{
+	//	overlapBounds->GetOwner()->DestroyObject();
+	//}
+	//
+}
+
 
 void Player::SetPoweredEngine(bool powered)
 {

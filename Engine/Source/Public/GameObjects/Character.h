@@ -1,5 +1,6 @@
 #pragma once
 #include "PhysicsObject.h"
+#include "Math/Bounds.h"
 
 class Character : public PhysicsObject
 {

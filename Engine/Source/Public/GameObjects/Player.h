@@ -13,6 +13,8 @@ protected:
 
 	virtual void OnUpdate(float deltaTime) override;
 
+	virtual void OnOverlapEnter(Bounds* overlapBounds, Bounds* hitBounds) override;
+
 	// Change the engine effect animations
 	void SetPoweredEngine(bool powered);
 

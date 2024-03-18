@@ -5,7 +5,7 @@
 #define SCALE 3.0f
 #define SIZE (48.0f * SCALE)
 #define HALF_SIZE (SIZE / 2.0f) 
-
+#define BOUNDS_SIZE (SIZE * 0.65f)
 Enemy::Enemy()
 {
 	m_MaxSpeed = 100.0f;
@@ -13,6 +13,10 @@ Enemy::Enemy()
 	m_MainSprite = AddSprite(
 		"Content/Sprites/MainShip/Bases/PNGs/Main Ship - Base - Very damaged.png"
 	);
+
+	Bounds* enemyBounds = AddBounds(0.0f, BOUNDS_SIZE);
+	enemyBounds->m_OriginOffset = -BOUNDS_SIZE / 2;
+	enemyBounds->m_Tag = "ENEMY";
 }
 
 void Enemy::OnStart()

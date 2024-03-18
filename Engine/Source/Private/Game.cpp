@@ -5,6 +5,7 @@
 #include "Graphics/Texture.h"
 #include "Input.h"
 #include "GameObjects/GameObject.h"
+#include "Math/Bounds.h"
 
 // DEBUG
 #include "GameObjects/Player.h"
@@ -291,6 +292,15 @@ void Game::Update()
 		{
 			GO->Update((float)deltaTime);
 			GO->PostUpdate((float)deltaTime);
+
+			// Looking through all of the other game objects
+			for (auto otherGO : m_GameObjectStack)
+			{
+				for (auto otherBounds : otherGO->GetAllBounds())
+				{
+					GO->TestOverlapEvent(otherBounds);
+				}
+			}
 		}
 	}
 
@@ -320,6 +330,40 @@ void Game::Render()
 		if (texRef != nullptr)
 		{
 			texRef->Draw();
+		}
+	}
+
+	// Render bounds if marked debug
+	for (auto GO : m_GameObjectStack)
+	{
+		if (GO == nullptr)
+		{
+			continue;
+		}
+
+		// Loop through all the game object bounds
+		for (auto testBounds : GO->GetAllBounds())
+		{
+			// Set the colour of the next drawn thing in SDL, in this cacse the bounds
+			SDL_SetRenderDrawColor(
+				m_RendererRef,
+				testBounds->m_RenderColour.r,
+				testBounds->m_RenderColour.g,
+				testBounds->m_RenderColour.b,
+				255
+			);
+
+			// Converting the EERect to an SDL_FRect
+			SDL_FRect boundsRect
+			{
+				testBounds->GetCenter().x,
+				testBounds->GetCenter().y,
+				testBounds->m_Rect.extent.x,
+				testBounds->m_Rect.extent.y
+			};
+
+			// Draws a rectangle to the window
+			SDL_RenderDrawRectF(m_RendererRef, &boundsRect);
 		}
 	}
 
