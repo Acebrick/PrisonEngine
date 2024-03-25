@@ -1,6 +1,7 @@
 #include "GameObjects/Player.h"
 #include "Input.h"
 #include "GameObjects/Enemy.h"
+#include "Debug.h"
 
 #define Super Character
 
@@ -51,6 +52,7 @@ Player::Player()
 
 	Bounds* playerBounds = AddBounds( {640.0f, 360.0f }, 48.0f * SCALE_BOUNDS);
 	playerBounds->m_OriginOffset = -24.0f * SCALE_BOUNDS;
+	//playerBounds->m_Debug = true;
 }
 
 void Player::OnStart()
@@ -101,10 +103,11 @@ void Player::OnUpdate(float deltaTime)
 void Player::OnOverlapEnter(Bounds* overlapBounds, Bounds* hitBounds)
 {
 	// Destroy by tag
-	//if (overlapBounds->m_Tag == "ENEMY")
-	//{
-	//	
-	//}
+	if (overlapBounds->m_Tag == "ENEMY")
+	{
+		//EE_LOG("GameObject", "Entered");
+		overlapBounds->GetOwner()->DestroyObject();
+	}
 
 	// Destroy by object type detection
 	//if (dynamic_cast<Enemy*>(overlapBounds->GetOwner()))

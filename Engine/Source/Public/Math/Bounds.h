@@ -78,10 +78,20 @@ public:
 	// Get the game object that owns the bounds
 	GameObject* GetOwner() const { return m_Owner; }
 
+	// Mark the bounds for destroy
+	void DestroyBounds() { m_ShouldDestroy = true; }
+
+	// Check if the bounds is marked for destroy
+	bool isPendingDestroy() const { return m_ShouldDestroy; }
+
+	// Debug visualise the bounds
+	bool m_Debug;
 	
 
 private:
 
 	// Owner object the bounds is attached to
 	GameObject* m_Owner;
+
+	bool m_ShouldDestroy;
 };

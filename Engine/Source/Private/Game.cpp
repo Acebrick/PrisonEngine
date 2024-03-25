@@ -5,11 +5,8 @@
 #include "Graphics/Texture.h"
 #include "Input.h"
 #include "GameObjects/GameObject.h"
-#include "Math/Bounds.h"
-
-// DEBUG
-#include "GameObjects/Player.h"
-#include "GameObjects/Enemy.h"
+#include "GameStates/GameStateMachine.h"
+#include "GameStates/PlayState.h"
 
 Game* Game::GetGame()
 {
@@ -101,18 +98,6 @@ void Game::DestroyTexture(Texture* textureToDestroy)
 	EE_LOG("Game", "Texture has been destroyed");
 }
 
-template<typename T>
-T* Game::AddGameObject()
-{
-	// Create the game object
-	T* newObject = new T();
-
-	// Add the object to our pending spawn array
-	m_GameOjectPendingSpawn.push_back(newObject);
-
-	return newObject;
-}
-
 Game::Game()
 {
 	printf("Game created\n");
@@ -121,6 +106,7 @@ Game::Game()
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
 	m_GameInput = nullptr;
+	m_GameStateMachine = nullptr;
 }
 
 Game::~Game()
@@ -173,11 +159,12 @@ void Game::Start()
 
 	// Create the game input
 	m_GameInput = new Input();
-	
-	// DEBUG
 
-	AddGameObject<Player>();
-	AddGameObject<Enemy>();
+	// Create the game state machine
+	GameState* Default = new PlayState();
+	m_GameStateMachine = new GameStateMachine(Default);
+
+	// DEBUG
 
 	GameLoop();
 }
@@ -202,22 +189,9 @@ void Game::GameLoop()
 
 void Game::Cleanup()
 {
-	// Destory any objects pending spawn
-	for (auto GO : m_GameOjectPendingSpawn)
-	{
-		GO->Cleanup();
-		delete GO;
-		GO = nullptr;
-	}
+	// Run the cleanup for the active game state
+	m_GameStateMachine->Cleanup();
 
-	// Destroy any remaining game objects
-	for (auto GO : m_GameObjectStack)
-	{
-		GO->Cleanup();
-		delete GO;
-		GO = nullptr;
-	}
-	
 	// Clean up and remove all textures from the texture stack
 	for (int i = m_TextureStack.size() - 1; i > -1; --i)
 	{
@@ -244,15 +218,8 @@ void Game::Cleanup()
 
 void Game::PreLoop()
 {
-	// Add all game object pending spawn to the game object stack
-	for (auto GO : m_GameOjectPendingSpawn)
-	{
-		m_GameObjectStack.push_back(GO);
-		GO->Start();
-	}
-
-	// Resize the array to 0
-	m_GameOjectPendingSpawn.clear();
+	// Run the active game states pre loop
+	m_GameStateMachine->PreLoop();
 }
 
 void Game::ProcessInput()
@@ -260,16 +227,8 @@ void Game::ProcessInput()
 	// Process the inputs for the game
 	m_GameInput->ProcessInput();
 
-	
-
-	// Run the input listener function for all game objects
-	for (auto GO : m_GameObjectStack)
-	{
-		if (GO != nullptr)
-		{
-			GO->ProcessInput(m_GameInput);
-		}		
-	}
+	// Process input for the current active game state
+	m_GameStateMachine->ProcessInput(m_GameInput);
 }
 
 void Game::Update()
@@ -285,24 +244,8 @@ void Game::Update()
 	// Set the last tick time
 	lastTickTime = currentTickTime;
 
-	// Run the update logic for all game objects
-	for (auto GO : m_GameObjectStack)
-	{
-		if (GO != nullptr)
-		{
-			GO->Update((float)deltaTime);
-			GO->PostUpdate((float)deltaTime);
-
-			// Looking through all of the other game objects
-			for (auto otherGO : m_GameObjectStack)
-			{
-				for (auto otherBounds : otherGO->GetAllBounds())
-				{
-					GO->TestOverlapEvent(otherBounds);
-				}
-			}
-		}
-	}
+	// Runs the active game states update
+	m_GameStateMachine->Update(static_cast<float>(deltaTime));
 
 	// Caps the frame rate (1000 represents milliseconds)
 	int frameDuration = 1000 / 240;
@@ -333,39 +276,9 @@ void Game::Render()
 		}
 	}
 
-	// Render bounds if marked debug
-	for (auto GO : m_GameObjectStack)
-	{
-		if (GO == nullptr)
-		{
-			continue;
-		}
-
-		// Loop through all the game object bounds
-		for (auto testBounds : GO->GetAllBounds())
-		{
-			// Set the colour of the next drawn thing in SDL, in this cacse the bounds
-			SDL_SetRenderDrawColor(
-				m_RendererRef,
-				testBounds->m_RenderColour.r,
-				testBounds->m_RenderColour.g,
-				testBounds->m_RenderColour.b,
-				255
-			);
-
-			// Converting the EERect to an SDL_FRect
-			SDL_FRect boundsRect
-			{
-				testBounds->GetCenter().x,
-				testBounds->GetCenter().y,
-				testBounds->m_Rect.extent.x,
-				testBounds->m_Rect.extent.y
-			};
-
-			// Draws a rectangle to the window
-			SDL_RenderDrawRectF(m_RendererRef, &boundsRect);
-		}
-	}
+	// Run the active game states render
+	// Mostly just for debugging bounds
+	m_GameStateMachine->Render(m_RendererRef);
 
 	// Present the graphics to the renderer
 	SDL_RenderPresent(m_RendererRef);
@@ -373,21 +286,6 @@ void Game::Render()
 
 void Game::CollectGarbage()
 {
-	// Delete objects at the end of each frame
-	for (int i = m_GameObjectStack.size() - 1; i >= 0; i--) // i-- may cause issues
-	{
-		if (m_GameObjectStack[i]->isPendingDestroy() == false)
-		{
-			continue;
-		}
-
-		if (m_GameObjectStack[i] != nullptr)
-		{
-			m_GameObjectStack[i]->Cleanup();
-			delete m_GameObjectStack[i];
-		}
-
-		// Remove from and resize the array
-		m_GameObjectStack.erase(m_GameObjectStack.begin() + i);
-	}
+	// Runs the active game state garbage collection
+	m_GameStateMachine->GarbageCollection();
 }

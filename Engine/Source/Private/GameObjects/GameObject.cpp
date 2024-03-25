@@ -45,6 +45,18 @@ void GameObject::PostUpdate(float deltaTime)
 	OnPostUpdate(deltaTime);
 }
 
+void GameObject::CollectGarbage()
+{
+	// Loops through all of the bounds and checks if tyhe overlapping bounds are marked for destroy
+	// If so remove those bounds from the overlapping array
+	for (const auto testBounds : m_BoundsStack)
+	{
+		std::erase_if(testBounds->m_Overlapped,
+			[](Bounds* overlappedBounds) { return overlappedBounds->isPendingDestroy(); } // lambda function / predacator
+		);
+	}
+}
+
 void GameObject::OnDestroy()
 {
 	EE_LOG("GameObject", "GameObject has been destroyed");
@@ -76,9 +88,17 @@ void GameObject::BoundsMatchObjectPosition()
 void GameObject::DestroyObject()
 {
 	// Ensure the OnDestroy only runs once
-	if (!m_ShouldDestroy)
+	if (m_ShouldDestroy)
 	{
-		OnDestroy();
+		return;
+	}
+
+	OnDestroy();
+
+	// Loop through all of the bounds and mark them for destroy
+	for (const auto testBounds : m_BoundsStack)
+	{
+		testBounds->DestroyBounds();
 	}
 
 	m_ShouldDestroy = true;
@@ -148,7 +168,20 @@ void GameObject::TestOverlapEvent(Bounds* otherBounds)
 		{
 			continue;
 		}
-
+		 
+		if (testBounds->m_Debug)
+		{
+			// Change the colour if there is anything overlapping this bounds
+			if (testBounds->m_Overlapped.size() > 0)
+			{
+				testBounds->m_RenderColour = STBoundsColour(0, 255, 0); // Green
+			}
+			else
+			{
+				testBounds->m_RenderColour = STBoundsColour(255, 0, 0); // Red
+			}
+		}
+		
 		// Make sure the bounds is not this one
 		if (otherBounds->GetOwner() == this)
 		{
@@ -173,7 +206,7 @@ void GameObject::TestOverlapEvent(Bounds* otherBounds)
 
 				OnOverlapExit(otherBounds, testBounds);
 
-				EE_LOG("GameObject", "Exited");
+				//EE_LOG("GameObject", "Exited");
 			}
 		}
 		else
@@ -185,18 +218,8 @@ void GameObject::TestOverlapEvent(Bounds* otherBounds)
 
 				OnOverlapEnter(otherBounds, testBounds);
 
-				EE_LOG("GameObject", "Entered");
+				//EE_LOG("GameObject", "Entered");
 			}
-		}
-
-		// Change the colour if there is anything overlapping this bounds
-		if (testBounds->m_Overlapped.size() > 0)
-		{
-			testBounds->m_RenderColour = STBoundsColour(0, 255, 0); // Green
-		}
-		else
-		{
-			testBounds->m_RenderColour = STBoundsColour(255, 0, 0); // Red
 		}
 	}
 }

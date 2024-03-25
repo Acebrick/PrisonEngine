@@ -7,6 +7,8 @@ Bounds::Bounds(GameObject* owner, Vector2 origin, Vector2 extent)
 	m_Owner = owner;
 	m_CollisionType = CT_OVERLAP;
 	m_Tag = "ALL";
+	m_ShouldDestroy = false;
+	m_Debug = false;
 }
 
 bool Bounds::BoundsIntersect(const Bounds& boundsA, const Bounds& boundsB)
